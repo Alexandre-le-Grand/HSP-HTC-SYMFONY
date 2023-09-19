@@ -1,0 +1,131 @@
+-- Table Utilisateur
+CREATE TABLE Utilisateur (
+    id_utilisateur INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255),
+    prenom VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    statut TINYINT(1),
+    login VARCHAR(255) UNIQUE,
+    mdp VARCHAR(255),
+    ref_admin INT(11) NOT NULL,
+    FOREIGN KEY (ref_admin) REFERENCES Utilisateur(id_utilisateur)
+);
+
+-- Table Representant_Hôpital
+CREATE TABLE Representant_Hopital (
+    id_representant INT PRIMARY KEY,
+    nom VARCHAR(255),
+    prenom VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    statut TINYINT(1),
+    login VARCHAR(255) UNIQUE,
+    mdp VARCHAR(255),
+    nom_hopital VARCHAR(255),
+    adresse VARCHAR(255),
+    role VARCHAR(255),
+    ref_admin INT(11) NOT NULL,
+    FOREIGN KEY (ref_admin) REFERENCES Utilisateur(id_utilisateur)
+);
+
+-- Table Administrateur
+CREATE TABLE Administrateur (
+    id_administrateur INT PRIMARY KEY,
+    nom VARCHAR(255),
+    prenom VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    statut TINYINT(1),
+    login VARCHAR(255) UNIQUE,
+    mdp VARCHAR(255),
+    ref_admin INT(11) NOT NULL,
+    FOREIGN KEY (ref_admin) REFERENCES Utilisateur(id_utilisateur)
+);
+
+-- Table Étudiant
+CREATE TABLE Etudiant (
+    id_etudiant INT PRIMARY KEY,
+    domaine_etude VARCHAR(255),
+    nom VARCHAR(255),
+    prenom VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    statut TINYINT(1),
+    login VARCHAR(255) UNIQUE,
+    mdp VARCHAR(255),
+    ref_admin INT(11) NOT NULL,
+    FOREIGN KEY (ref_admin) REFERENCES Utilisateur(id_utilisateur)
+);
+
+-- Table Inscription_Conférence
+CREATE TABLE Inscription_Conference (
+    id_inscription INT AUTO_INCREMENT PRIMARY KEY,
+    ref_etudiant INT(11) NOT NULL,
+    ref_conference INT(11) NOT NULL,
+    FOREIGN KEY (ref_etudiant) REFERENCES Etudiant(id_etudiant),
+    FOREIGN KEY (ref_conference) REFERENCES Conference(id_conference)
+);
+
+-- Table Création_Conference
+CREATE TABLE Creation_Conference (
+    id_creation INT PRIMARY KEY,
+    ref_etudiant INT(11) NOT NULL,
+    ref_conference INT(11) NOT NULL,
+    FOREIGN KEY (ref_etudiant) REFERENCES Etudiant(id_etudiant),
+    FOREIGN KEY (ref_conference) REFERENCES Conference(id_conference)
+);
+
+-- Table Postulation
+CREATE TABLE Postulation (
+    id_postulation INT PRIMARY KEY,
+    ref_etudiant INT(11) NOT NULL,
+    ref_offre INT(11) NOT NULL,
+    FOREIGN KEY (ref_etudiant) REFERENCES Etudiant(id_etudiant),
+    FOREIGN KEY (ref_offre) REFERENCES Offre_Emploi(id_offre)
+);
+
+-- Table Conférence
+CREATE TABLE Conference (
+    id_conference INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255),
+    description TEXT,
+    date DATE,
+    heure TIME,
+    duree INT,
+    statut TINYINT(1),
+    ref_admin INT(11) NOT NULL,
+    ref_representant_hopital INT(11) NOT NULL,
+    ref_amphitheatre INT(11) NOT NULL,
+    FOREIGN KEY (ref_admin) REFERENCES Utilisateur(id_utilisateur),
+    FOREIGN KEY (ref_representant_hopital) REFERENCES Representant_Hopital(id_representant),
+    FOREIGN KEY (ref_amphitheatre) REFERENCES Amphitheatre(id_amphi)
+);
+
+-- Table Offre_Emploi
+CREATE TABLE Offre_Emploi (
+    id_offre INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(255),
+    description TEXT,
+    type_contrat VARCHAR(255),
+    ref_representant_hopital INT(11) NOT NULL,
+    FOREIGN KEY (ref_representant_hopital) REFERENCES Representant_Hopital(id_representant)
+);
+
+-- Table Amphitheatre
+CREATE TABLE Amphitheatre (
+    id_amphi INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255),
+    nb_places INT
+);
+
+
+-- Table Rendez-vous
+CREATE TABLE Rendez_vous (
+    id_rdv INT AUTO_INCREMENT PRIMARY KEY,
+    date DATE,
+    heure TIME,
+    statut TINYINT(1),
+    ref_representant_hopital INT(11) NOT NULL,
+    ref_etudiant INT(11) NOT NULL,
+    ref_offre_emploi INT(11) NOT NULL,
+    FOREIGN KEY (ref_representant_hopital) REFERENCES Representant_Hopital(id_representant),
+    FOREIGN KEY (ref_etudiant) REFERENCES Etudiant(id_etudiant),
+    FOREIGN KEY (ref_offre_emploi) REFERENCES Offre_Emploi(id_offre)
+);
