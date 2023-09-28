@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ConferenceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
@@ -22,8 +23,11 @@ class Conference
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
 
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $heure = null;
+
     #[ORM\Column]
-    private ?int $duree = null;
+    private ?\DateInterval $duree = null;
 
     #[ORM\Column]
     private ?bool $statut = null;
@@ -32,7 +36,7 @@ class Conference
     private ?Administrateur $ref_admin = null;
 
     #[ORM\ManyToOne]
-    private ?RepresentantH $ref_representantH = null;
+    private ?RepresentantH $ref_representant_h = null;
 
     #[ORM\ManyToOne]
     private ?Amphitheatre $ref_amphi = null;
@@ -78,12 +82,24 @@ class Conference
         return $this;
     }
 
-    public function getDuree(): ?int
+    public function getHeure(): ?\DateTimeImmutable
+    {
+        return $this->heure;
+    }
+
+    public function setHeure(\DateTimeImmutable $heure): static
+    {
+        $this->heure = $heure;
+
+        return $this;
+    }
+
+    public function getDuree(): ?\DateInterval
     {
         return $this->duree;
     }
 
-    public function setDuree(int $duree): static
+    public function setDuree(\DateInterval $duree): static
     {
         $this->duree = $duree;
 
@@ -116,12 +132,12 @@ class Conference
 
     public function getRefRepresentantH(): ?RepresentantH
     {
-        return $this->ref_representantH;
+        return $this->ref_representant_h;
     }
 
-    public function setRefRepresentantH(?RepresentantH $ref_representantH): static
+    public function setRefRepresentantH(?RepresentantH $ref_representant_h): static
     {
-        $this->ref_representantH = $ref_representantH;
+        $this->ref_representant_h = $ref_representant_h;
 
         return $this;
     }

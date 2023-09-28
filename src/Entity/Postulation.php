@@ -13,11 +13,11 @@ class Postulation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'postulations')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?OffreEmploi $ref_offre = null;
 
-    #[ORM\ManyToOne(inversedBy: 'postulations')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Etudiant $ref_etudiant = null;
 

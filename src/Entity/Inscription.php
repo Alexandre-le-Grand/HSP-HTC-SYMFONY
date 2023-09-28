@@ -18,7 +18,7 @@ class Inscription
     #[ORM\ManyToMany(targetEntity: Etudiant::class)]
     private Collection $ref_etudiant;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Conference $ref_conference = null;
 
@@ -61,7 +61,7 @@ class Inscription
         return $this->ref_conference;
     }
 
-    public function setRefConference(Conference $ref_conference): static
+    public function setRefConference(?Conference $ref_conference): static
     {
         $this->ref_conference = $ref_conference;
 

@@ -28,8 +28,7 @@ class Utilisateur
     #[ORM\Column(length: 255)]
     private ?string $mdp = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ref_admin')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne]
     private ?Administrateur $ref_admin = null;
 
     public function getId(): ?int

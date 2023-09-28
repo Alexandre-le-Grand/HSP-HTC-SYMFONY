@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\RendezVousRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RendezVousRepository::class)]
@@ -13,17 +14,20 @@ class RendezVous
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
+
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $heure = null;
 
     #[ORM\Column]
     private ?bool $statut = null;
 
-    #[ORM\ManyToOne(inversedBy: 'rendezvous')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?RepresentantH $ref_representantH = null;
+    private ?RepresentantH $ref_representant_h = null;
 
-    #[ORM\ManyToOne(inversedBy: 'rendezvous')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Etudiant $ref_etudiant = null;
 
@@ -48,6 +52,18 @@ class RendezVous
         return $this;
     }
 
+    public function getHeure(): ?\DateTimeImmutable
+    {
+        return $this->heure;
+    }
+
+    public function setHeure(\DateTimeImmutable $heure): static
+    {
+        $this->heure = $heure;
+
+        return $this;
+    }
+
     public function isStatut(): ?bool
     {
         return $this->statut;
@@ -62,12 +78,12 @@ class RendezVous
 
     public function getRefRepresentantH(): ?RepresentantH
     {
-        return $this->ref_representantH;
+        return $this->ref_representant_h;
     }
 
-    public function setRefRepresentantH(?RepresentantH $ref_representantH): static
+    public function setRefRepresentantH(?RepresentantH $ref_representant_h): static
     {
-        $this->ref_representantH = $ref_representantH;
+        $this->ref_representant_h = $ref_representant_h;
 
         return $this;
     }

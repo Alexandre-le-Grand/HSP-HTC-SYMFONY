@@ -8,6 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RepresentantHRepository::class)]
 class RepresentantH extends Utilisateur
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
     #[ORM\Column(length: 255)]
     private ?string $nom_hopital = null;
 
@@ -16,6 +21,14 @@ class RepresentantH extends Utilisateur
 
     #[ORM\Column(length: 255)]
     private ?string $role = null;
+
+    #[ORM\ManyToOne]
+    private ?Administrateur $ref_admin = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getNomHopital(): ?string
     {
@@ -49,6 +62,18 @@ class RepresentantH extends Utilisateur
     public function setRole(string $role): static
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getRefAdmin(): ?Administrateur
+    {
+        return $this->ref_admin;
+    }
+
+    public function setRefAdmin(?Administrateur $ref_admin): static
+    {
+        $this->ref_admin = $ref_admin;
 
         return $this;
     }

@@ -16,6 +16,9 @@ class Creation
     #[ORM\ManyToOne]
     private ?Etudiant $ref_etudiant = null;
 
+    #[ORM\ManyToOne]
+    private ?RepresentantH $ref_representant_h = null;
+
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Conference $ref_conference = null;
@@ -33,6 +36,18 @@ class Creation
     public function setRefEtudiant(?Etudiant $ref_etudiant): static
     {
         $this->ref_etudiant = $ref_etudiant;
+
+        return $this;
+    }
+
+    public function getRefRepresentantH(): ?RepresentantH
+    {
+        return $this->ref_representant_h;
+    }
+
+    public function setRefRepresentantH(?RepresentantH $ref_representant_h): static
+    {
+        $this->ref_representant_h = $ref_representant_h;
 
         return $this;
     }
