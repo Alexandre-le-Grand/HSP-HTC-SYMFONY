@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\RepresentantHRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: RepresentantHRepository::class)]
 class RepresentantH extends Utilisateur
 {
@@ -14,12 +16,18 @@ class RepresentantH extends Utilisateur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $nom_hopital = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $role = null;
 
     #[ORM\ManyToOne]

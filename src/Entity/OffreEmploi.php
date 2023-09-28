@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\OffreEmploiRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: OffreEmploiRepository::class)]
 class OffreEmploi
 {
@@ -14,12 +16,18 @@ class OffreEmploi
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $type_contrat = null;
 
     #[ORM\ManyToOne]

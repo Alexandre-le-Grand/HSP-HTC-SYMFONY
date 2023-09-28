@@ -6,6 +6,8 @@ use App\Repository\ConferenceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
 class Conference
 {
@@ -15,21 +17,29 @@ class Conference
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\Date]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[Assert\Time]
     private ?\DateTimeImmutable $heure = null;
 
     #[ORM\Column]
+    #[Assert\Positive]
     private ?\DateInterval $duree = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
     private ?bool $statut = null;
 
     #[ORM\ManyToOne]

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\AmphitheatreRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: AmphitheatreRepository::class)]
 class Amphitheatre
 {
@@ -14,9 +16,13 @@ class Amphitheatre
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Assert\Positive]
+    #[Assert\NotNull]
     private ?int $nb_places = null;
 
     public function getId(): ?int

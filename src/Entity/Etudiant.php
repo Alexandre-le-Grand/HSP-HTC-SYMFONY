@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\EtudiantRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
 class Etudiant extends Utilisateur
 {
@@ -14,6 +16,8 @@ class Etudiant extends Utilisateur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
     private ?string $domaine_etude = null;
 
     #[ORM\ManyToOne]

@@ -6,6 +6,8 @@ use App\Repository\RendezVousRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: RendezVousRepository::class)]
 class RendezVous
 {
@@ -15,12 +17,17 @@ class RendezVous
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Assert\Date]
+    #[Assert\NotNull]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[Assert\Time]
+    #[Assert\NotNull]
     private ?\DateTimeImmutable $heure = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
     private ?bool $statut = null;
 
     #[ORM\ManyToOne]

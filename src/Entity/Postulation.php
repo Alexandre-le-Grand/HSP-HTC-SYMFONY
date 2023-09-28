@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PostulationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PostulationRepository::class)]
 class Postulation
 {
@@ -15,10 +16,12 @@ class Postulation
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private ?OffreEmploi $ref_offre = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private ?Etudiant $ref_etudiant = null;
 
     public function getId(): ?int
