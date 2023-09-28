@@ -14,33 +14,33 @@ class RendezVous
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Assert\Date]
     #[Assert\NotNull]
-    private ?\DateTimeImmutable $date = null;
+    private ?\DateTimeImmutable $date;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     #[Assert\Time]
     #[Assert\NotNull]
-    private ?\DateTimeImmutable $heure = null;
+    private ?\DateTimeImmutable $heure;
 
     #[ORM\Column]
     #[Assert\NotNull]
-    private ?bool $statut = null;
+    private ?bool $statut;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?RepresentantH $ref_representant_h = null;
+    private ?RepresentantH $ref_representant_h;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Etudiant $ref_etudiant = null;
+    private ?Etudiant $ref_etudiant;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?OffreEmploi $ref_offre = null;
+    private ?OffreEmploi $ref_offre;
 
     public function getId(): ?int
     {

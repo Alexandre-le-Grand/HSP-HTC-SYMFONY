@@ -13,17 +13,17 @@ class Amphitheatre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $nom = null;
+    private ?string $nom;
 
     #[ORM\Column]
     #[Assert\Positive]
     #[Assert\NotNull]
-    private ?int $nb_places = null;
+    private ?int $nb_places;
 
     public function getId(): ?int
     {

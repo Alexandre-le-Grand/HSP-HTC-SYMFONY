@@ -11,10 +11,10 @@ class Administrateur extends Utilisateur
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\ManyToOne(targetEntity: self::class)]
-    private ?self $ref_admin = null;
+    private ?self $ref_admin;
 
     public function getId(): ?int
     {

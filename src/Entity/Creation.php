@@ -11,17 +11,17 @@ class Creation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\ManyToOne]
-    private ?Etudiant $ref_etudiant = null;
+    private ?Etudiant $ref_etudiant;
 
     #[ORM\ManyToOne]
-    private ?RepresentantH $ref_representant_h = null;
+    private ?RepresentantH $ref_representant_h;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Conference $ref_conference = null;
+    private ?Conference $ref_conference;
 
     public function getId(): ?int
     {

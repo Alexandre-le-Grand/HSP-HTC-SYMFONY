@@ -13,35 +13,35 @@ class Utilisateur
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $nom = null;
+    private ?string $nom;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $prenom = null;
+    private ?string $prenom;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Assert\NotNull]
-    private ?string $email = null;
+    private ?string $email;
 
     #[ORM\Column]
     #[Assert\NotNull]
-    private ?bool $statut = null;
+    private ?bool $statut;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $mdp = null;
+    private ?string $mdp;
 
     #[ORM\ManyToOne]
-    private ?Administrateur $ref_admin = null;
+    private ?Administrateur $ref_admin;
 
     public function getId(): ?int
     {

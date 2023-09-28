@@ -12,17 +12,17 @@ class Postulation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
-    private ?OffreEmploi $ref_offre = null;
+    private ?OffreEmploi $ref_offre;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
-    private ?Etudiant $ref_etudiant = null;
+    private ?Etudiant $ref_etudiant;
 
     public function getId(): ?int
     {

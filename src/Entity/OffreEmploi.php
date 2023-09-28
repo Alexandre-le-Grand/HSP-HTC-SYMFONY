@@ -13,26 +13,26 @@ class OffreEmploi
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $titre = null;
+    private ?string $titre;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $description = null;
+    private ?string $description;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $type_contrat = null;
+    private ?string $type_contrat;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?RepresentantH $ref_representant_h = null;
+    private ?RepresentantH $ref_representant_h;
 
     public function getId(): ?int
     {

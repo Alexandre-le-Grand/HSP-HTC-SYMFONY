@@ -13,25 +13,25 @@ class RepresentantH extends Utilisateur
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $nom_hopital = null;
+    private ?string $nom_hopital;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $adresse = null;
+    private ?string $adresse;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $role = null;
+    private ?string $role;
 
     #[ORM\ManyToOne]
-    private ?Administrateur $ref_admin = null;
+    private ?Administrateur $ref_admin;
 
     public function getId(): ?int
     {

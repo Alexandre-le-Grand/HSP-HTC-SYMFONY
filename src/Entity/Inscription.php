@@ -13,14 +13,14 @@ class Inscription
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\ManyToMany(targetEntity: Etudiant::class)]
     private Collection $ref_etudiant;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Conference $ref_conference = null;
+    private ?Conference $ref_conference;
 
     public function __construct()
     {

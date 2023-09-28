@@ -14,42 +14,42 @@ class Conference
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $nom = null;
+    private ?string $nom;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $description = null;
+    private ?string $description;
 
     #[ORM\Column]
     #[Assert\Date]
-    private ?\DateTimeImmutable $date = null;
+    private ?\DateTimeImmutable $date;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     #[Assert\Time]
-    private ?\DateTimeImmutable $heure = null;
+    private ?\DateTimeImmutable $heure;
 
     #[ORM\Column]
     #[Assert\Positive]
-    private ?\DateInterval $duree = null;
+    private ?\DateInterval $duree;
 
     #[ORM\Column]
     #[Assert\NotNull]
-    private ?bool $statut = null;
+    private ?bool $statut;
 
     #[ORM\ManyToOne]
-    private ?Administrateur $ref_admin = null;
+    private ?Administrateur $ref_admin;
 
     #[ORM\ManyToOne]
-    private ?RepresentantH $ref_representant_h = null;
+    private ?RepresentantH $ref_representant_h;
 
     #[ORM\ManyToOne]
-    private ?Amphitheatre $ref_amphi = null;
+    private ?Amphitheatre $ref_amphi;
 
     public function getId(): ?int
     {
