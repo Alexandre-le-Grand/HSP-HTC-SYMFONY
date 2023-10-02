@@ -30,8 +30,6 @@ class RepresentantH extends Utilisateur
     #[Assert\NotNull]
     private ?string $role;
 
-    #[ORM\ManyToOne]
-    private ?Administrateur $ref_admin;
 
     public function getId(): ?int
     {
@@ -70,18 +68,6 @@ class RepresentantH extends Utilisateur
     public function setRole(string $role): static
     {
         $this->role = $role;
-
-        return $this;
-    }
-
-    public function getRefAdmin(): ?Administrateur
-    {
-        return $this->ref_admin;
-    }
-
-    public function setRefAdmin(?Administrateur $ref_admin): static
-    {
-        $this->ref_admin = $ref_admin;
 
         return $this;
     }
