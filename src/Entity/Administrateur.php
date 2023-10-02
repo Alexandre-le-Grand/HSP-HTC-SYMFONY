@@ -13,15 +13,15 @@ class Administrateur extends Utilisateur
     #[ORM\Column]
     private ?int $id;
 
-    #[ORM\ManyToOne(targetEntity: self::class)]
-    private ?self $ref_admin;
+    //#[ORM\ManyToOne(targetEntity: self::class)]
+    //private ?self $ref_admin;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getRefAdmin(): ?self
+    /*public function getRefAdmin(): ?self
     {
         return $this->ref_admin;
     }
@@ -31,5 +31,5 @@ class Administrateur extends Utilisateur
         $this->ref_admin = $ref_admin;
 
         return $this;
-    }
+    }*/
 }

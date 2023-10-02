@@ -40,8 +40,8 @@ class Utilisateur
     #[Assert\NotNull]
     private ?string $mdp;
 
-    #[ORM\ManyToOne]
-    private ?Administrateur $ref_admin;
+   // #[ORM\ManyToOne]
+   // private ?Administrateur $ref_admin;
 
     public function getId(): ?int
     {
@@ -108,7 +108,7 @@ class Utilisateur
         return $this;
     }
 
-    public function getRefAdmin(): ?Administrateur
+   /* public function getRefAdmin(): ?Administrateur
     {
         return $this->ref_admin;
     }
@@ -118,5 +118,5 @@ class Utilisateur
         $this->ref_admin = $ref_admin;
 
         return $this;
-    }
+    }*/
 }
