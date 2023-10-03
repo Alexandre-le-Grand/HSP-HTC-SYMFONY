@@ -19,10 +19,10 @@ class Postulation
     #[Assert\NotNull]
     private ?OffreEmploi $ref_offre;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'postulations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
-    private ?Etudiant $ref_etudiant;
+    private ?Utilisateur $ref_utilisateur = null;
+
 
     public function getId(): ?int
     {
@@ -41,15 +41,17 @@ class Postulation
         return $this;
     }
 
-    public function getRefEtudiant(): ?Etudiant
+    public function getRefUtilisateur(): ?Utilisateur
     {
-        return $this->ref_etudiant;
+        return $this->ref_utilisateur;
     }
 
-    public function setRefEtudiant(?Etudiant $ref_etudiant): static
+    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
     {
-        $this->ref_etudiant = $ref_etudiant;
+        $this->ref_utilisateur = $ref_utilisateur;
 
         return $this;
     }
+
+
 }

@@ -30,9 +30,11 @@ class OffreEmploi
     #[Assert\NotNull]
     private ?string $type_contrat;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'offreEmplois')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?RepresentantH $ref_representant_h;
+    private ?Utilisateur $ref_utilisateur = null;
+
+
 
     public function getId(): ?int
     {
@@ -75,14 +77,14 @@ class OffreEmploi
         return $this;
     }
 
-    public function getRefRepresentantH(): ?RepresentantH
+    public function getRefUtilisateur(): ?Utilisateur
     {
-        return $this->ref_representant_h;
+        return $this->ref_utilisateur;
     }
 
-    public function setRefRepresentantH(?RepresentantH $ref_representant_h): static
+    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
     {
-        $this->ref_representant_h = $ref_representant_h;
+        $this->ref_utilisateur = $ref_utilisateur;
 
         return $this;
     }

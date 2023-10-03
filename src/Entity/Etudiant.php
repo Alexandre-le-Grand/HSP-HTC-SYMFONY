@@ -20,9 +20,6 @@ class Etudiant extends Utilisateur
     #[Assert\NotNull]
     private ?string $domaine_etude;
 
-    #[ORM\ManyToOne]
-    private ?Administrateur $ref_admin;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -36,18 +33,6 @@ class Etudiant extends Utilisateur
     public function setDomaineEtude(string $domaine_etude): static
     {
         $this->domaine_etude = $domaine_etude;
-
-        return $this;
-    }
-
-    public function getRefAdmin(): ?Administrateur
-    {
-        return $this->ref_admin;
-    }
-
-    public function setRefAdmin(?Administrateur $ref_admin): static
-    {
-        $this->ref_admin = $ref_admin;
 
         return $this;
     }

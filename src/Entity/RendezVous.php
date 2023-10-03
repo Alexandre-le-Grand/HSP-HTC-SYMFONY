@@ -30,17 +30,14 @@ class RendezVous
     #[Assert\NotNull]
     private ?bool $statut;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'rendezVouses')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?RepresentantH $ref_representant_h;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Etudiant $ref_etudiant;
+    private ?Utilisateur $ref_utilisateur = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?OffreEmploi $ref_offre;
+
 
     public function getId(): ?int
     {
@@ -83,30 +80,6 @@ class RendezVous
         return $this;
     }
 
-    public function getRefRepresentantH(): ?RepresentantH
-    {
-        return $this->ref_representant_h;
-    }
-
-    public function setRefRepresentantH(?RepresentantH $ref_representant_h): static
-    {
-        $this->ref_representant_h = $ref_representant_h;
-
-        return $this;
-    }
-
-    public function getRefEtudiant(): ?Etudiant
-    {
-        return $this->ref_etudiant;
-    }
-
-    public function setRefEtudiant(?Etudiant $ref_etudiant): static
-    {
-        $this->ref_etudiant = $ref_etudiant;
-
-        return $this;
-    }
-
     public function getRefOffre(): ?OffreEmploi
     {
         return $this->ref_offre;
@@ -115,6 +88,18 @@ class RendezVous
     public function setRefOffre(?OffreEmploi $ref_offre): static
     {
         $this->ref_offre = $ref_offre;
+
+        return $this;
+    }
+
+    public function getRefUtilisateur(): ?Utilisateur
+    {
+        return $this->ref_utilisateur;
+    }
+
+    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
+    {
+        $this->ref_utilisateur = $ref_utilisateur;
 
         return $this;
     }

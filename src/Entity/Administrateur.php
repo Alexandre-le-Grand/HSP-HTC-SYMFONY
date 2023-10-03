@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AdministrateurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdministrateurRepository::class)]
@@ -12,6 +14,14 @@ class Administrateur extends Utilisateur
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id;
+
+    #[ORM\OneToMany(mappedBy: 'ref_admin', targetEntity: Utilisateur::class)]
+    private Collection $utilisateurs;
+
+    public function __construct()
+    {
+        $this->utilisateurs = new ArrayCollection();
+    }
 
     //#[ORM\ManyToOne(targetEntity: self::class)]
     //private ?self $ref_admin;
@@ -32,4 +42,34 @@ class Administrateur extends Utilisateur
 
         return $this;
     }*/
+
+    /**
+     * @return Collection<int, Utilisateur>
+     */
+    public function getUtilisateurs(): Collection
+    {
+        return $this->utilisateurs;
+    }
+
+    public function addUtilisateur(Utilisateur $utilisateur): static
+    {
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs->add($utilisateur);
+            $utilisateur->setRefAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateur $utilisateur): static
+    {
+        if ($this->utilisateurs->removeElement($utilisateur)) {
+            // set the owning side to null (unless already changed)
+            if ($utilisateur->getRefAdmin() === $this) {
+                $utilisateur->setRefAdmin(null);
+            }
+        }
+
+        return $this;
+    }
 }

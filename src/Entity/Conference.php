@@ -42,14 +42,16 @@ class Conference
     #[Assert\NotNull]
     private ?bool $statut;
 
-    #[ORM\ManyToOne]
-    private ?Administrateur $ref_admin;
-
-    #[ORM\ManyToOne]
-    private ?RepresentantH $ref_representant_h;
 
     #[ORM\ManyToOne]
     private ?Amphitheatre $ref_amphi;
+
+    #[ORM\OneToOne(mappedBy: 'ref_conference', cascade: ['persist', 'remove'])]
+    private ?Inscription $inscription = null;
+
+    #[ORM\ManyToOne(inversedBy: 'conferences')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $ref_utilisateur = null;
 
     public function getId(): ?int
     {
@@ -128,30 +130,6 @@ class Conference
         return $this;
     }
 
-    public function getRefAdmin(): ?Administrateur
-    {
-        return $this->ref_admin;
-    }
-
-    public function setRefAdmin(?Administrateur $ref_admin): static
-    {
-        $this->ref_admin = $ref_admin;
-
-        return $this;
-    }
-
-    public function getRefRepresentantH(): ?RepresentantH
-    {
-        return $this->ref_representant_h;
-    }
-
-    public function setRefRepresentantH(?RepresentantH $ref_representant_h): static
-    {
-        $this->ref_representant_h = $ref_representant_h;
-
-        return $this;
-    }
-
     public function getRefAmphi(): ?Amphitheatre
     {
         return $this->ref_amphi;
@@ -160,6 +138,35 @@ class Conference
     public function setRefAmphi(?Amphitheatre $ref_amphi): static
     {
         $this->ref_amphi = $ref_amphi;
+
+        return $this;
+    }
+
+    public function getInscription(): ?Inscription
+    {
+        return $this->inscription;
+    }
+
+    public function setInscription(Inscription $inscription): static
+    {
+        // set the owning side of the relation if necessary
+        if ($inscription->getRefConference() !== $this) {
+            $inscription->setRefConference($this);
+        }
+
+        $this->inscription = $inscription;
+
+        return $this;
+    }
+
+    public function getRefUtilisateur(): ?Utilisateur
+    {
+        return $this->ref_utilisateur;
+    }
+
+    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
+    {
+        $this->ref_utilisateur = $ref_utilisateur;
 
         return $this;
     }
