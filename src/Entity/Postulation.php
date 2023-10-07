@@ -5,24 +5,21 @@ namespace App\Entity;
 use App\Repository\PostulationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PostulationRepository::class)]
 class Postulation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
-    private ?OffreEmploi $ref_offre;
+    private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'postulations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $ref_utilisateur = null;
+    private ?OffreEmploi $ref_offre = null;
 
+    #[ORM\ManyToOne(inversedBy: 'postulations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Etudiant $ref_etudiant = null;
 
     public function getId(): ?int
     {
@@ -41,17 +38,15 @@ class Postulation
         return $this;
     }
 
-    public function getRefUtilisateur(): ?Utilisateur
+    public function getRefEtudiant(): ?Etudiant
     {
-        return $this->ref_utilisateur;
+        return $this->ref_etudiant;
     }
 
-    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
+    public function setRefEtudiant(?Etudiant $ref_etudiant): static
     {
-        $this->ref_utilisateur = $ref_utilisateur;
+        $this->ref_etudiant = $ref_etudiant;
 
         return $this;
     }
-
-
 }

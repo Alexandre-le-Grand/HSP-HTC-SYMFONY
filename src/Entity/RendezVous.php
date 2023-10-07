@@ -6,38 +6,34 @@ use App\Repository\RendezVousRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
 #[ORM\Entity(repositoryClass: RendezVousRepository::class)]
 class RendezVous
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
-
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    #[Assert\Date]
-    #[Assert\NotNull]
-    private ?\DateTimeImmutable $date;
-
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    #[Assert\Time]
-    #[Assert\NotNull]
-    private ?\DateTimeImmutable $heure;
+    private ?int $id = null;
 
     #[ORM\Column]
-    #[Assert\NotNull]
-    private ?bool $statut;
+    private ?\DateTimeImmutable $date = null;
+
+    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $heure = null;
+
+    #[ORM\Column]
+    private ?bool $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'rendezVouses')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $ref_utilisateur = null;
+    private ?RepresentantH $ref_representantH = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'rendezVouses')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?OffreEmploi $ref_offre;
+    private ?Etudiant $ref_etudiant = null;
 
+    #[ORM\ManyToOne(inversedBy: 'rendezVouses')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?OffreEmploi $ref_offre = null;
 
     public function getId(): ?int
     {
@@ -80,6 +76,30 @@ class RendezVous
         return $this;
     }
 
+    public function getRefRepresentantH(): ?RepresentantH
+    {
+        return $this->ref_representantH;
+    }
+
+    public function setRefRepresentantH(?RepresentantH $ref_representantH): static
+    {
+        $this->ref_representantH = $ref_representantH;
+
+        return $this;
+    }
+
+    public function getRefEtudiant(): ?Etudiant
+    {
+        return $this->ref_etudiant;
+    }
+
+    public function setRefEtudiant(?Etudiant $ref_etudiant): static
+    {
+        $this->ref_etudiant = $ref_etudiant;
+
+        return $this;
+    }
+
     public function getRefOffre(): ?OffreEmploi
     {
         return $this->ref_offre;
@@ -88,18 +108,6 @@ class RendezVous
     public function setRefOffre(?OffreEmploi $ref_offre): static
     {
         $this->ref_offre = $ref_offre;
-
-        return $this;
-    }
-
-    public function getRefUtilisateur(): ?Utilisateur
-    {
-        return $this->ref_utilisateur;
-    }
-
-    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
-    {
-        $this->ref_utilisateur = $ref_utilisateur;
 
         return $this;
     }

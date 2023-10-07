@@ -11,8 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Administrateur extends Utilisateur
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\ManyToOne(inversedBy: 'administrateurs')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?int $id;
 
     #[ORM\OneToMany(mappedBy: 'ref_admin', targetEntity: Utilisateur::class)]
@@ -23,25 +23,17 @@ class Administrateur extends Utilisateur
         $this->utilisateurs = new ArrayCollection();
     }
 
-    //#[ORM\ManyToOne(targetEntity: self::class)]
-    //private ?self $ref_admin;
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /*public function getRefAdmin(): ?self
+    public function setId(?Utilisateur $id): static
     {
-        return $this->ref_admin;
-    }
-
-    public function setRefAdmin(?self $ref_admin): static
-    {
-        $this->ref_admin = $ref_admin;
+        $this->id = $id;
 
         return $this;
-    }*/
+    }
 
     /**
      * @return Collection<int, Utilisateur>

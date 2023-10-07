@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\OffreEmploiRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OffreEmploiRepository::class)]
 class OffreEmploi
@@ -13,28 +13,32 @@ class OffreEmploi
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?string $titre;
+    private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?string $description;
+    private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?string $type_contrat;
+    private ?string $type_contrat = null;
 
     #[ORM\ManyToOne(inversedBy: 'offreEmplois')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $ref_utilisateur = null;
+    private ?RepresentantH $ref_representant_h = null;
 
+    #[ORM\OneToMany(mappedBy: 'ref_offre', targetEntity: RendezVous::class, orphanRemoval: true)]
+    private Collection $rendezVouses;
 
+    #[ORM\OneToMany(mappedBy: 'ref_offre', targetEntity: Postulation::class, orphanRemoval: true)]
+    private Collection $postulations;
+
+    public function __construct()
+    {
+        $this->rendezVouses = new ArrayCollection();
+        $this->postulations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -77,14 +81,74 @@ class OffreEmploi
         return $this;
     }
 
-    public function getRefUtilisateur(): ?Utilisateur
+    public function getRefRepresentantH(): ?RepresentantH
     {
-        return $this->ref_utilisateur;
+        return $this->ref_representant_h;
     }
 
-    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
+    public function setRefRepresentantH(?RepresentantH $ref_representant_h): static
     {
-        $this->ref_utilisateur = $ref_utilisateur;
+        $this->ref_representant_h = $ref_representant_h;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RendezVous>
+     */
+    public function getRendezVouses(): Collection
+    {
+        return $this->rendezVouses;
+    }
+
+    public function addRendezVouse(RendezVous $rendezVouse): static
+    {
+        if (!$this->rendezVouses->contains($rendezVouse)) {
+            $this->rendezVouses->add($rendezVouse);
+            $rendezVouse->setRefOffre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezVouse(RendezVous $rendezVouse): static
+    {
+        if ($this->rendezVouses->removeElement($rendezVouse)) {
+            // set the owning side to null (unless already changed)
+            if ($rendezVouse->getRefOffre() === $this) {
+                $rendezVouse->setRefOffre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Postulation>
+     */
+    public function getPostulations(): Collection
+    {
+        return $this->postulations;
+    }
+
+    public function addPostulation(Postulation $postulation): static
+    {
+        if (!$this->postulations->contains($postulation)) {
+            $this->postulations->add($postulation);
+            $postulation->setRefOffre($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostulation(Postulation $postulation): static
+    {
+        if ($this->postulations->removeElement($postulation)) {
+            // set the owning side to null (unless already changed)
+            if ($postulation->getRefOffre() === $this) {
+                $postulation->setRefOffre(null);
+            }
+        }
 
         return $this;
     }

@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ConferenceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
 class Conference
@@ -14,44 +14,40 @@ class Conference
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?string $nom;
+    private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?string $description;
+    private ?string $description = null;
 
-    #[ORM\Column]
-    #[Assert\Date]
-    private ?\DateTimeImmutable $date;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    #[Assert\Time]
-    private ?\DateTimeImmutable $heure;
+    private ?\DateTimeImmutable $heure = null;
 
     #[ORM\Column]
-    #[Assert\Positive]
-    private ?\DateInterval $duree;
+    private ?\DateInterval $duree = null;
 
     #[ORM\Column]
-    #[Assert\NotNull]
-    private ?bool $statut;
-
-
-    #[ORM\ManyToOne]
-    private ?Amphitheatre $ref_amphi;
-
-    #[ORM\OneToOne(mappedBy: 'ref_conference', cascade: ['persist', 'remove'])]
-    private ?Inscription $inscription = null;
+    private ?bool $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'conferences')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $ref_utilisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'conferences')]
+    private ?Amphitheatre $ref_amphi = null;
+
+    #[ORM\OneToMany(mappedBy: 'ref_conference', targetEntity: Inscription::class, orphanRemoval: true)]
+    private Collection $inscriptions;
+
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -130,6 +126,18 @@ class Conference
         return $this;
     }
 
+    public function getRefUtilisateur(): ?Utilisateur
+    {
+        return $this->ref_utilisateur;
+    }
+
+    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
+    {
+        $this->ref_utilisateur = $ref_utilisateur;
+
+        return $this;
+    }
+
     public function getRefAmphi(): ?Amphitheatre
     {
         return $this->ref_amphi;
@@ -142,31 +150,32 @@ class Conference
         return $this;
     }
 
-    public function getInscription(): ?Inscription
+    /**
+     * @return Collection<int, Inscription>
+     */
+    public function getInscriptions(): Collection
     {
-        return $this->inscription;
+        return $this->inscriptions;
     }
 
-    public function setInscription(Inscription $inscription): static
+    public function addInscription(Inscription $inscription): static
     {
-        // set the owning side of the relation if necessary
-        if ($inscription->getRefConference() !== $this) {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
             $inscription->setRefConference($this);
         }
-
-        $this->inscription = $inscription;
 
         return $this;
     }
 
-    public function getRefUtilisateur(): ?Utilisateur
+    public function removeInscription(Inscription $inscription): static
     {
-        return $this->ref_utilisateur;
-    }
-
-    public function setRefUtilisateur(?Utilisateur $ref_utilisateur): static
-    {
-        $this->ref_utilisateur = $ref_utilisateur;
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getRefConference() === $this) {
+                $inscription->setRefConference(null);
+            }
+        }
 
         return $this;
     }
