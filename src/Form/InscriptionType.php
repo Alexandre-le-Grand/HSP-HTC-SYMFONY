@@ -11,8 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
 
+use Symfony\Component\Validator\Constraints as Assert;
 
 class InscriptionType extends AbstractType
 {
@@ -25,57 +25,67 @@ class InscriptionType extends AbstractType
                 ],
                 'label' => 'Nom',
                 'label_attr' => [
-                    'class' => 'form-label',
+                    'class' => 'form-label mt-4'
                 ],
-                'contraints' => [
-                    new Assert\NotBlank(),
+                'constraints' => [
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('prenom', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
                 ],
-                'label' => 'prenom',
+                'label' => 'Prenom',
                 'label_attr' => [
-                    'class' => 'form-label',
+                    'class' => 'form-label mt-4'
                 ],
-                'contraints' => [
-                    new Assert\NotBlank(),
+                'constraints' => [
+                    new Assert\NotBlank()
                 ]
             ])
-            ->add('email', EmailType::class, [
+            ->add('email', EmailType::class,[
                 'attr' => [
                     'class' => 'form-control',
                 ],
-                'label' => 'Adresse Email',
+                'label' => 'Adresse mail',
                 'label_attr' => [
-                    'class' => 'form-label',
+                    'class' => 'form-label mt-4'
                 ],
-                'contraints' => [
+                'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Email(),
+                    new Assert\Email()
                 ]
             ])
-            ->add('mdp', RepeatedType::class, [
-                'type' => PasswordType::class,
+            ->add('plainPassword', RepeatedType:: class, [
+                'type' => PasswordType:: class,
                 'first_options' => [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
                     'label' => 'Mot de passe',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ]
                 ],
                 'second_options' => [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
                     'label' => 'Confirmation du mot de passe',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ]
                 ],
-                'invalid_message' => 'Les mots de passe ne correspondent pas.!',
+                'invalid_message' => 'Les mots de passe ne correspondent pas. '
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-primary',
-                ],
+                    'class' =>'btn btn-primary mt-4'
+                ]
             ]);
     }
 
-
-
-        public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
