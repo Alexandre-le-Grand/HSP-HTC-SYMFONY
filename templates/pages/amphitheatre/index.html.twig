@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HSP - Amphithéatres{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        {% if not amphitheatres.items is same as ([]) %}
+            <h1 style="text-align: center">Liste des Amphithéâtres</h1>
+
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total d'amphithéatres :
+                    {{ amphitheatres.getTotalItemCount }}
+                </h4>
+            </div>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Nombre de places</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for amphitheatre in amphitheatres %}
+                    <tr class="Default">
+                        <th scope="row">{{ amphitheatre.id }}</th>
+                        <td>{{ amphitheatre.nom }}</td>
+                        <td>{{ amphitheatre.nbplaces }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(amphitheatres) }}
+            </div>
+        {% else %}
+            <h4>Il n'y à pas d'amphithéatres</h4>
+        {% endif %}
+    </div>
+{% endblock %}

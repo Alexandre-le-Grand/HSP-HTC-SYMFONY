@@ -6,8 +6,10 @@ use App\Repository\AmphitheatreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AmphitheatreRepository::class)]
+#[UniqueEntity('nom')]
 class Amphitheatre
 {
     #[ORM\Id]
