@@ -7,6 +7,10 @@
         {% if not conferences.items is same as ([]) %}
         <h1 style="text-align: center">Liste des conférences</h1>
 
+            <a href="{{ path('conference.new') }}" class="btn btn-primary">
+                Créer une conférence
+            </a>
+
         <div class="count mt-4">
             <h4 style="color: #1aa990">
                 Nombre total de conférences :

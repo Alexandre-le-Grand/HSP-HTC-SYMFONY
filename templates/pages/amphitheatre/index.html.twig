@@ -5,7 +5,17 @@
 {% block body %}
     <div class="container mt-4">
         {% if not amphitheatres.items is same as ([]) %}
-            <h1 style="text-align: center">Liste des Amphithéâtres</h1>
+            <h1 style="text-align: center">Liste des amphithéâtres</h1>
+
+            <a href="{{ path('amphitheatre.new') }}" class="btn btn-primary">
+                Créer un amphithéâtre
+            </a>
+
+            {%  for message in app.flashes('success') %}
+                <div class="alert alert-success mt-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
 
             <div class="count mt-4">
                 <h4 style="color: #1aa990">
@@ -20,6 +30,8 @@
                     <th scope="col">ID</th>
                     <th scope="col">Nom</th>
                     <th scope="col">Nombre de places</th>
+                    <th scope="col">Edition</th>
+                    <th scope="col">Suppression</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,6 +40,12 @@
                         <th scope="row">{{ amphitheatre.id }}</th>
                         <td>{{ amphitheatre.nom }}</td>
                         <td>{{ amphitheatre.nbplaces }}</td>
+                        <td>
+                            <a href="{{ path('amphitheatre.edit', { id: amphitheatre.id }) }}" class="btn btn-info">Modifier</a>
+                        </td>
+                        <td>
+                            <a href="{{ path('amphitheatre.delete', { id: amphitheatre.id }) }}" class="btn btn-danger">Supprimer</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

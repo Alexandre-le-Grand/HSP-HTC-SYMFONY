@@ -21,7 +21,7 @@ class ConferenceController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/conference', name: 'app_conference', methods: ['GET'])]
+    #[Route('/conference', name: 'conference.index', methods: ['GET'])]
     public function index(
         ConferenceRepository $repository,
         PaginatorInterface $paginator,
