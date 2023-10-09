@@ -65,6 +65,9 @@ class InscriptionType extends AbstractType
                     'label' => 'Mot de passe',
                     'label_attr' => [
                         'class' => 'form-label mt-4'
+                    ],
+                    'constraints' => [
+                        new Assert\NotBlank()
                     ]
                 ],
                 'second_options' => [
