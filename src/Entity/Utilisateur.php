@@ -47,7 +47,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = 'password';
 
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
     #[Assert\NotNull]
     private array $roles = [];
 

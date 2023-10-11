@@ -62,4 +62,36 @@ class ConferenceController extends AbstractController
         ]);
     }
 
+    #[Route('/conference/validation/{id}', 'conference.validation', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function validerUtilisateur(Conference $conference, EntityManagerInterface $manager): Response
+    {
+        $conference->setStatut(true);
+        $manager->persist($conference);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'La conférence a été validée avec succès !'
+        );
+
+        return $this->redirectToRoute('conference.index');
+    }
+
+    #[Route('/utilisateur/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function invaliderUtilisateur(Conference $conference, EntityManagerInterface $manager): Response
+    {
+        $conference->setStatut(false);
+        $manager->persist($conference);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'La conférence a été invalidée avec succès !'
+        );
+
+        return $this->redirectToRoute('conference.index');
+    }
+
 }

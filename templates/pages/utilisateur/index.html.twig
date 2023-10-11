@@ -5,13 +5,14 @@
 {% block body %}
     <div class="container mt-4">
         {% if not utilisateur.items is same as ([]) %}
-        <h1 style="text-align: center">Liste des utilisateurs</h1>
+            <h1 style="text-align: center">Liste des utilisateurs</h1>
 
-        <div class="count mt-4">
-            <h4 style="color: #1aa990">
-                Nombre total d'utilisateurs :
-                {{ utilisateur.getTotalItemCount }}
-            </h4>
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total d'utilisateurs :
+                    {{ utilisateur.getTotalItemCount }}
+                </h4>
+            </div>
 
             <table class="table table-hover">
                 <thead>
@@ -21,42 +22,42 @@
                     <th scope="col">Prénom</th>
                     <th scope="col">Email</th>
                     <th scope="col">Statut</th>
-                    <th scope="col">Mot de passe</th>
+                    <th scope="col" style="max-width: 100px; overflow: hidden;">Mot de passe</th>
                     <th scope="col">Rôle</th>
-                    <th scope="col">Validation</th>
-                    <th scope="col">Invalidation</th>
+                    <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for utilisateur in utilisateur %}
-                <tr class="Default">
-                    <th scope="row">{{ utilisateur.id }}</th>
-                    <td>{{ utilisateur.nom }}</td>
-                    <td>{{ utilisateur.prenom }}</td>
-                    <td>{{ utilisateur.email }}</td>
-                    <td>{{ utilisateur.statut }}</td>
-                    <td>{{ utilisateur.password }}</td>
-                    <td>
-                        {% for role in utilisateur.roles %}
-                            {{ role }}
-                            {% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        <a href="{{ path('utilisateur.validation', {'id': utilisateur.id}) }}" class="btn btn-info">Valider</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('utilisateur.invalidation', {'id': utilisateur.id}) }}" class="btn btn-danger">Invalider</a>
-                    </td>
-                    {% endfor %}
+                    <tr class="Default">
+                        <th scope="row">{{ utilisateur.id }}</th>
+                        <td>{{ utilisateur.nom }}</td>
+                        <td>{{ utilisateur.prenom }}</td>
+                        <td>{{ utilisateur.email }}</td>
+                        <td>{{ utilisateur.statut }}</td>
+                        <td style="max-width: 600px">{{ utilisateur.password }}</td>
+                        <td>
+                            {% for role in utilisateur.roles %}
+                                {{ role }}
+                                {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <div class="d-flex">
+                                <a href="{{ path('utilisateur.validation', {'id': utilisateur.id}) }}" class="btn btn-info">Valider</a>
+                                <a href="{{ path('utilisateur.invalidation', {'id': utilisateur.id}) }}" class="btn btn-danger">Invalider</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
+
             <div class="navigation d-flex justify-content-center mt-4">
                 {{ knp_pagination_render(utilisateur) }}
             </div>
-            {% else %}
-                <h4>Il n'y a pas d'utilisateurs</h4>
-            {% endif %}
-        </div>
+        {% else %}
+            <h4>Il n'y a pas d'utilisateurs</h4>
+        {% endif %}
     </div>
 {% endblock %}

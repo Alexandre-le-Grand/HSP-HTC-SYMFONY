@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use App\Form\UtilisateurType;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UtilisateurController extends AbstractController
 {
     #[Route('/utilisateur', name: 'utilisateur.index')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(
         UtilisateurRepository $repository,
         PaginatorInterface $paginator,
@@ -57,6 +60,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('/utilisateur/validation/{id}', 'utilisateur.validation', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function validerUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $manager): Response
     {
         $utilisateur->setStatut(true);
@@ -72,6 +76,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('/utilisateur/invalidation/{id}', 'utilisateur.invalidation', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function invaliderUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $manager): Response
     {
         $utilisateur->setStatut(false);

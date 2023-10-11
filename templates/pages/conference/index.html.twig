@@ -5,48 +5,61 @@
 {% block body %}
     <div class="container mt-4">
         {% if not conferences.items is same as ([]) %}
-        <h1 style="text-align: center">Liste des conférences</h1>
+            <h1 style="text-align: center">Liste des conférences</h1>
 
-            <a href="{{ path('conference.new') }}" class="btn btn-primary">
-                Créer une conférence
-            </a>
+            {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
+                <a href="{{ path('conference.new') }}" class="btn btn-primary">
+                    Créer une conférence
+                </a>
+            {% endif %}
 
-        <div class="count mt-4">
-            <h4 style="color: #1aa990">
-                Nombre total de conférences :
-                {{ conferences.getTotalItemCount }}
-            </h4>
-        </div>
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total de conférences :
+                    {{ conferences.getTotalItemCount }}
+                </h4>
+            </div>
 
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Numéro</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Description</th>
-                <th scope="col">Date</th>
-                <th scope="col">Heure</th>
-                <th scope="col">Durée</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for conference in conferences%}
-                <tr class="Default">
-                    <th scope="row">{{ conference.id }}</th>
-                    <td>{{ conference.nom }}</td>
-                    <td>{{ conference.description }}</td>
-                    <td>{{ conference.date|date('Y-m-d') }}</td>
-                    <td>{{ conference.heure|date('H:i') }}</td>
-                    <td>{{ conference.duree.format('%H:%I') }}</td>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Numéro</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Heure</th>
+                    <th scope="col">Durée</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th scope="col">Statut</th>
+                        <th scope="col">Actions</th>
+                    {% endif %}
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <div class="navigation d-flex justify-content-center mt-4">
-            {{ knp_pagination_render(conferences) }}
-        </div>
+                </thead>
+                <tbody>
+                {% for conference in conferences%}
+                    <tr class="Default">
+                        <th scope="row">{{ conference.id }}</th>
+                        <td>{{ conference.nom }}</td>
+                        <td>{{ conference.description }}</td>
+                        <td>{{ conference.date|date('Y-m-d') }}</td>
+                        <td>{{ conference.heure|date('H:i') }}</td>
+                        <td>{{ conference.duree.format('%H:%I') }}</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td>{{ conference.statut }}</td>
+                            <td>
+                                <a href="{{ path('conference.validation', {'id': conference.id}) }}" class="btn btn-info">Valider</a>
+                                <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(conferences) }}
+            </div>
         {% else %}
-        <h4>Il n'y à pas de conférences</h4>
+            <h4>Il n'y a pas de conférences</h4>
         {% endif %}
     </div>
 {% endblock %}
