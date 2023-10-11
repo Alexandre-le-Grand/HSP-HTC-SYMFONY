@@ -55,4 +55,34 @@ class UtilisateurController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/utilisateur/validation/{id}', 'utilisateur.validation', methods: ['GET', 'POST'])]
+    public function validerUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $manager): Response
+    {
+        $utilisateur->setStatut(true);
+        $manager->persist($utilisateur);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'L\'utilisateur a été validé avec succès !'
+        );
+
+        return $this->redirectToRoute('utilisateur.index');
+    }
+
+    #[Route('/utilisateur/invalidation/{id}', 'utilisateur.invalidation', methods: ['GET', 'POST'])]
+    public function invaliderUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $manager): Response
+    {
+        $utilisateur->setStatut(false);
+        $manager->persist($utilisateur);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'L\'utilisateur a été invalidé avec succès !'
+        );
+
+        return $this->redirectToRoute('utilisateur.index');
+    }
 }

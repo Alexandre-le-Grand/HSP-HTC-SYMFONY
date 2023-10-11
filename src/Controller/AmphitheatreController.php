@@ -7,6 +7,7 @@ use App\Form\AmphitheatreType;
 use App\Repository\AmphitheatreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,7 @@ class AmphitheatreController extends AbstractController
      * @return Response
      */
     #[Route('/amphitheatre', name: 'amphitheatre.index')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(
         AmphitheatreRepository $repository,
         PaginatorInterface $paginator,
@@ -44,6 +46,7 @@ class AmphitheatreController extends AbstractController
      * @return Response
      */
     #[Route('/amphitheatre/nouveau', 'amphitheatre.new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(
         Request $request,
         EntityManagerInterface $manager) : Response
@@ -72,6 +75,7 @@ class AmphitheatreController extends AbstractController
     }
 
     #[Route('/amphitheatre/edition/{id}', 'amphitheatre.edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(
         Amphitheatre $amphitheatre,
         Request $request,
@@ -99,6 +103,7 @@ class AmphitheatreController extends AbstractController
     }
 
     #[Route('amphitheatre/suppression/{id}', 'amphitheatre.delete', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(
         EntityManagerInterface $manager,
         Amphitheatre $amphitheatre) : Response

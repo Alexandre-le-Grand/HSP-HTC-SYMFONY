@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} HSP - Menu administrateur
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4" style="text-align: center">
+        <h2>Menu Administrateur</h2>
+        <hr class="my-4">
+        <div class="d-grid gap-2">
+            <a href="utilisateur">
+                <button class="btn btn-lg btn-primary" type="button">Comptes utilisateurs</button>
+            </a>
+            <a href="conference">
+                <button class="btn btn-lg btn-primary" type="button">Conférences</button>
+            </a>
+            <a>
+                <button class="btn btn-lg btn-primary" type="button">Inscriptions</button>
+            </a>
+            <a href="amphitheatre">
+                <button class="btn btn-lg btn-primary" type="button">Amphithéâtres</button>
+            </a>
+            <a>
+                <button class="btn btn-lg btn-primary" type="button">Types d'offres</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

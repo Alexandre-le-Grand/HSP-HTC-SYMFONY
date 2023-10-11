@@ -7,6 +7,7 @@ use App\Form\ConferenceType;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,7 @@ class ConferenceController extends AbstractController
      * @return Response
      */
     #[Route('/conference', name: 'conference.index', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function index(
         ConferenceRepository $repository,
         PaginatorInterface $paginator,
@@ -39,6 +41,7 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/nouveau', 'conference.new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(
         Request $request,
         EntityManagerInterface $manager) : Response
