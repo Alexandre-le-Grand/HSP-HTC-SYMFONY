@@ -78,7 +78,7 @@ class ConferenceController extends AbstractController
         return $this->redirectToRoute('conference.index');
     }
 
-    #[Route('/utilisateur/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
+    #[Route('/conference/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function invaliderUtilisateur(Conference $conference, EntityManagerInterface $manager): Response
     {

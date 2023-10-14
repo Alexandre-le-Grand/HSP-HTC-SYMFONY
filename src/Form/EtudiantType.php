@@ -2,31 +2,110 @@
 
 namespace App\Form;
 
-use App\Entity\Utilisateur;
+use App\Entity\Etudiant;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 class EtudiantType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('prenom')
-            ->add('email')
-            ->add('password')
+
+            ->add('nom', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Nom :',
+                'label_attr' => [
+                    'class' => 'form-label mt-4'
+                ],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('prenom', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Prénom :',
+                'label_attr' => [
+                    'class' => 'form-label mt-4'
+                ],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('email', EmailType::class,[
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Adresse mail :',
+                'label_attr' => [
+                    'class' => 'form-label mt-4'
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Email()
+                ]
+            ])
             ->add('domaine_etude', TextType::class, [
-                'label' => 'Domaine d\'étude',
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+                'label' => 'Domaine d\'étude :',
+                'label_attr' => [
+                    'class' => 'form-label mt-4'
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
+            ->add('plainPassword', RepeatedType:: class, [
+                'type' => PasswordType:: class,
+                'first_options' => [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Mot de passe :',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ],
+                    'constraints' => [
+                        new Assert\NotBlank()
+                    ]
+                ],
+                'second_options' => [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Confirmation du mot de passe :',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ]
+                ],
+                'invalid_message' => 'Les mots de passe ne correspondent pas. '
+            ])
+            ->add('submit', SubmitType::class, [
+                'attr' => [
+                    'class' =>'btn btn-primary mt-4'
+                ],
+                'label' => 'S\'inscrire',
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Utilisateur::class,
+            'data_class' => Etudiant::class,
         ]);
     }
 }

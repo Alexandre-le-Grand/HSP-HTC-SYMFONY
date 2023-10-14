@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} HSP - Menu
+    {% if is_granted('ROLE_ADMIN') %}administrateur{% endif %}
+    {% if is_granted('ROLE_ETUDIANT') %}étudiant{% endif %}
+    {% if is_granted('ROLE_REPRESENTANT') %}représentant{% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4" style="text-align: center">
+        <h2>Menu
+            {% if is_granted('ROLE_ADMIN') %}Administrateur{% endif %}
+            {% if is_granted('ROLE_ETUDIANT') %}Étudiant{% endif %}
+            {% if is_granted('ROLE_REPRESENTANT') %}Représentant{% endif %}
+        </h2>
+        <hr class="my-4">
+        <div class="d-grid gap-2">
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="utilisateur">
+                    <button class="btn btn-lg btn-primary" type="button">Comptes utilisateurs</button>
+                </a>
+            {% endif %}
+            <a href="conference">
+                <button class="btn btn-lg btn-primary" type="button">Conférences</button>
+            </a>
+            {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
+                <a href="offre_emploi">
+                    <button class="btn btn-lg btn-primary" type="button">Offres d'emploi</button>
+                </a>
+            {% endif %}
+            {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
+                <a>
+                    <button class="btn btn-lg btn-primary" type="button">Rendez vous</button>
+                </a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a>
+                    <button class="btn btn-lg btn-primary" type="button">Inscriptions</button>
+                </a>
+                <a href="amphitheatre">
+                    <button class="btn btn-lg btn-primary" type="button">Amphithéâtres</button>
+                </a>
+                <a href="type_offre">
+                    <button class="btn btn-lg btn-primary" type="button">Types d'offres</button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -2,9 +2,13 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Administrateur;
 use App\Entity\Amphitheatre;
 use App\Entity\Conference;
-use App\Entity\Utilisateur;
+use App\Entity\Etudiant;
+use App\Entity\OffreEmploi;
+use App\Entity\RepresentantH;
+use App\Entity\TypeOffre;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -21,23 +25,59 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        for ($i=0; $i<25; $i++) {
-            $utilisateur = new Utilisateur();
-            $utilisateur->setNom($this->faker->word());
-            $utilisateur->setPrenom($this->faker->firstname());
-            $utilisateur->setEmail($this->faker->email());
-            $utilisateur->setStatut($this->faker->boolean());
-            $utilisateur->setRoles(['ROLE_USER']);
-            $utilisateur->setPlainpassword('password');
+        for ($i = 0; $i < 5; $i++) {
+            $admin = new Administrateur();
+            $admin->setNom($this->faker->lastName);
+            $admin->setPrenom($this->faker->firstname());
+            $admin->setEmail($this->faker->email());
+            $admin->setStatut(1);
+            $admin->setRoles(['ROLE_ADMIN']);
+            $admin->setPlainpassword('password');
 
+            // Pour le premier administrateur, pas de référence à un autre administrateur
+            if ($i > 0) {
+                $validePar = $this->getReference('admin_id' . ($i - 1));
+                $admin->setRefAdmin($validePar);
+            }
 
-            $manager->persist($utilisateur);
-            $this->addReference('utilisateur_id' . $i, $utilisateur);
+            $manager->persist($admin);
+            $this->addReference('admin_id' . $i, $admin);
         }
 
-        for ($i=0; $i<25; $i++) {
+        for ($i = 0; $i < 10; $i++) {
+            $etudiant = new Etudiant();
+            $etudiant->setNom($this->faker->lastName);
+            $etudiant->setPrenom($this->faker->firstname());
+            $etudiant->setEmail($this->faker->email());
+            $etudiant->setStatut($this->faker->boolean());
+            $etudiant->setRoles(['ROLE_ETUDIANT']);
+            $etudiant->setPlainpassword('password');
+            $domainesEtude = ['Chirurgie', 'Pédiatrie','Cardiologie','Dermatologie','Ophtalmologie','Neurologie','Radiologie','Psychiatrie','Orthopédie', 'Gastro-entérologie','Urologie','Néphrologie','Endocrinologie','Rhumatologie','Hématologie', 'Oncologie','Infectiologie' ,'Anesthésiologie'];
+            $etudiant->setDomaineEtude($this->faker->randomElement($domainesEtude));
+
+            $manager->persist($etudiant);
+            $this->addReference('etudiant_id' . $i, $etudiant);
+        }
+
+        for ($i = 0; $i < 10; $i++) {
+            $representant = new RepresentantH();
+            $representant->setNom($this->faker->lastName);
+            $representant->setPrenom($this->faker->firstname());
+            $representant->setEmail($this->faker->email());
+            $representant->setStatut($this->faker->boolean());
+            $representant->setRoles(['ROLE_REPRESENTANT']);
+            $representant->setPlainpassword('password');
+            $representant->setNomHopital($this->faker->lastName);
+            $representant->setAdresse($this->faker->address);
+            $representant->setRole($this->faker->jobTitle);
+
+            $manager->persist($representant);
+            $this->addReference('representant_id' . $i, $representant);
+        }
+
+        for ($i=0; $i < 10; $i++) {
             $amphitheatre = new Amphitheatre();
-            $amphitheatre->setNom($this->faker->word());
+            $amphitheatre->setNom($this->faker->lastName);
             $amphitheatre->setNbPlaces($this->faker->randomNumber(3));
 
             $manager->persist($amphitheatre);
@@ -45,7 +85,7 @@ class AppFixtures extends Fixture
         }
 
 
-        for ($i=0; $i<25; $i++) {
+        for ($i=0; $i < 10; $i++) {
             $conference = new Conference();
             $conference->setNom($this->faker->word());
             $conference->setDescription($this->faker->sentence());
@@ -63,13 +103,36 @@ class AppFixtures extends Fixture
 
             $conference->setStatut(false);
 
-            $utilisateurReference = $this->getReference('utilisateur_id' . $i % 25);
+            $utilisateurReference = $this->getReference('admin_id' . $i % 5);
             $conference->setRefUtilisateur($utilisateurReference);
             $amphitheatreReference = $this->getReference('amphitheatre_id' . $i % 10);
             $conference->setRefAmphi($amphitheatreReference);
 
             $manager->persist($conference);
         }
+
+        for ($i=0; $i < 10; $i++){
+            $offre = new OffreEmploi();
+            $offre->setTitre($this->faker->jobTitle);
+            $offre->setDescription($this->faker->text(30));
+            $typesContrat = ['CDD', 'CDI', 'Stage', 'Alternance', 'Intérim', 'Freelance'];
+
+            $typeContrat = $this->faker->randomElement($typesContrat);
+            $offre->setTypeContrat($typeContrat);
+
+            $representantReference = $this->getReference('representant_id' . $i);
+            $offre->setRefRepresentantH($representantReference);
+
+            $manager->persist($offre);
+        }
+
+        $typesOffre = ['CDD', 'CDI', 'Stage', 'Alternance', 'Intérim', 'Freelance'];
+        foreach ($typesOffre as $libelle) {
+            $type_offre = new TypeOffre();
+            $type_offre->setLibelle($libelle);
+            $manager->persist($type_offre);
+        }
+
 
 
         $manager->flush();

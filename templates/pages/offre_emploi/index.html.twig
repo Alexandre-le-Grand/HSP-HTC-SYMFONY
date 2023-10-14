@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HSP - Offres d'emploi{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        {% if not offres.items is same as ([]) %}
+            <h1 style="text-align: center">Liste des offres d'emploi</h1>
+
+            {%  for message in app.flashes('success') %}
+                <div class="alert alert-success mt-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total d'offres d'emploi :
+                    {{ offres.getTotalItemCount }}
+                </h4>
+            </div>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Titre</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Type de contrat</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for offre in offres %}
+                    <tr class="Default">
+                        <th scope="row">{{ offre.id }}</th>
+                        <td>{{ offre.titre }}</td>
+                        <td>{{ offre.description }}</td>
+                        <td>{{ offre.typecontrat }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(offres) }}
+            </div>
+        {% else %}
+            <h4>Il n'y a pas d'offres d'emploi</h4>
+        {% endif %}
+    </div>
+{% endblock %}

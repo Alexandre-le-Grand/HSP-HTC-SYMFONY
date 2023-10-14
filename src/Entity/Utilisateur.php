@@ -11,9 +11,11 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[UniqueEntity('email')]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: "type", type: "string")]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ORM\EntityListeners(['App\EntityListener\UserListener'])]
+#[UniqueEntity('email')]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -177,6 +179,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->statut = $statut;
 
         return $this;
+    }
+
+    public function getIsAccountValidated(): bool
+    {
+        return $this->statut === true;
     }
 
     public function getPlainpassword(): ?string

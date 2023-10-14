@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}HSP - Amphithéatres{% endblock %}
+{% block title %}HSP - Types d'offres{% endblock %}
 
 {% block body %}
     <div class="container mt-4">
-        {% if not amphitheatres.items is same as ([]) %}
-            <h1 style="text-align: center">Liste des amphithéâtres</h1>
+        {% if not type_offre.items is same as ([]) %}
+            <h1 style="text-align: center">Liste des types d'offres</h1>
 
             {%  for message in app.flashes('success') %}
                 <div class="alert alert-success mt-4">
@@ -13,14 +13,14 @@
                 </div>
             {% endfor %}
 
-            <a href="{{ path('amphitheatre.new') }}" class="btn btn-primary">
-                Créer un amphithéâtre
+            <a href="{{ path('type_offre.new') }}" class="btn btn-primary">
+                Créer un type d'offre
             </a>
 
             <div class="count mt-4">
                 <h4 style="color: #1aa990">
-                    Nombre total d'amphithéatres :
-                    {{ amphitheatres.getTotalItemCount }}
+                    Nombre total de types d'offres :
+                    {{ type_offre.getTotalItemCount }}
                 </h4>
             </div>
 
@@ -28,33 +28,32 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Nombre de places</th>
+                    <th scope="col">Libelle</th>
                     <th scope="col">Édition</th>
                     <th scope="col">Suppression</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for amphitheatre in amphitheatres %}
+                {% for type_offre in type_offre %}
                     <tr class="Default">
-                        <th scope="row">{{ amphitheatre.id }}</th>
-                        <td>{{ amphitheatre.nom }}</td>
-                        <td>{{ amphitheatre.nbplaces }}</td>
+                        <th scope="row">{{ type_offre.id }}</th>
+                        <td>{{ type_offre.libelle }}</td>
                         <td>
-                            <a href="{{ path('amphitheatre.edit', { id: amphitheatre.id }) }}" class="btn btn-info">Modifier</a>
+                            <a href="{{ path('type_offre.edit', { id: type_offre.id }) }}" class="btn btn-info">Modifier</a>
                         </td>
                         <td>
-                            <a href="{{ path('amphitheatre.delete', { id: amphitheatre.id }) }}" class="btn btn-danger">Supprimer</a>
+                            <a href="{{ path('type_offre.delete', { id: type_offre.id }) }}" class="btn btn-danger">Supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+
             <div class="navigation d-flex justify-content-center mt-4">
-                {{ knp_pagination_render(amphitheatres) }}
+                {{ knp_pagination_render(type_offre) }}
             </div>
         {% else %}
-            <h4>Il n'y a pas d'amphithéâtres</h4>
+            <h4>Il n'y a pas de type d'offre</h4>
         {% endif %}
     </div>
 {% endblock %}

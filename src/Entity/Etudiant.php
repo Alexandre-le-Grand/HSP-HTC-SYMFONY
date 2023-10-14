@@ -10,11 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
 class Etudiant extends Utilisateur
 {
-    #[ORM\Id]
-    #[ORM\ManyToOne(inversedBy: 'etudiants')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?int $id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $domaine_etude = null;
 
@@ -32,18 +27,6 @@ class Etudiant extends Utilisateur
         $this->rendezVouses = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
         $this->postulations = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(?Utilisateur $id): static
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getDomaineEtude(): ?string

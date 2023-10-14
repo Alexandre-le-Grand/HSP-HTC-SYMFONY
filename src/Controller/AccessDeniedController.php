@@ -6,13 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RepresentantHController extends AbstractController
+class AccessDeniedController extends AbstractController
 {
-    #[Route('/representant_h', name: 'app_representant_h')]
+    #[Route('/access_denied', name: 'access_denied.index')]
     public function index(): Response
     {
-        return $this->render('representant_h/index.html.twig', [
-            'controller_name' => 'RepresentantHController',
+        return $this->render('pages/access_denied/index.html.twig', [
+            'controller_name' => 'AccessDeniedController',
         ]);
     }
 }

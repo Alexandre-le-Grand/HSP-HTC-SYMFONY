@@ -7,6 +7,12 @@
         {% if not utilisateur.items is same as ([]) %}
             <h1 style="text-align: center">Liste des utilisateurs</h1>
 
+            {%  for message in app.flashes('success') %}
+                <div class="alert alert-success mt-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
             <div class="count mt-4">
                 <h4 style="color: #1aa990">
                     Nombre total d'utilisateurs :

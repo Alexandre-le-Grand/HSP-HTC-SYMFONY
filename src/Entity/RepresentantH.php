@@ -10,11 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RepresentantHRepository::class)]
 class RepresentantH extends Utilisateur
 {
-    #[ORM\Id]
-    #[ORM\ManyToOne(inversedBy: 'representantHs')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?int $id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $nom_hopital = null;
 
@@ -34,18 +29,6 @@ class RepresentantH extends Utilisateur
     {
         $this->offreEmplois = new ArrayCollection();
         $this->rendezVouses = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(?Utilisateur $id): static
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getNomHopital(): ?string

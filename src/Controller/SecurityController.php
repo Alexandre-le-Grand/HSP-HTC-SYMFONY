@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Utilisateur;
-use App\Form\InscriptionType;
+use App\Entity\Etudiant;
+use App\Entity\RepresentantH;
+use App\Form\EtudiantType;
+use App\Form\RepresentantHType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,29 +45,57 @@ class SecurityController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    #[Route('/inscription', 'security.inscription', methods: ['GET', 'POST'])]
-    public function registration(Request $request, EntityManagerInterface $manager) : Response
+    #[Route('/inscriptionEtudiant', 'security.inscriptionEtudiant', methods: ['GET', 'POST'])]
+    public function inscriptionEtudiant(Request $request, EntityManagerInterface $manager) : Response
     {
-        $utilisateur = new Utilisateur();
-        $utilisateur->setRoles(['ROLE_USER']);
-        $form = $this->createForm(InscriptionType::class, $utilisateur);
+        $etudiant = new Etudiant();
+        $etudiant->setRoles(['ROLE_ETUDIANT']);
+        $form = $this->createForm(EtudiantType::class, $etudiant);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $utilisateur = $form->getData();
+            $etudiant = $form->getData();
 
             $this->addFlash(
                 'success',
                 'Votre compte à bien été créé'
             );
 
-            $manager->persist($utilisateur);
+            $manager->persist($etudiant);
             $manager->flush();
 
             return $this->redirectToRoute('security.login');
         }
 
-        return $this->render('pages/security/inscription.html.twig', [
+        return $this->render('pages/security/inscriptionEtudiant.html.twig', [
+            'form' => $form->createView()
+        ]);
+
+    }
+
+    #[Route('/inscriptionRepresentant', 'security.inscriptionRepresentant', methods: ['GET', 'POST'])]
+    public function inscriptionRepresentant(Request $request, EntityManagerInterface $manager) : Response
+    {
+        $representant = new RepresentantH();
+        $representant->setRoles(['ROLE_REPRESENTANT']);
+        $form = $this->createForm(RepresentantHType::class, $representant);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $representant = $form->getData();
+
+            $this->addFlash(
+                'success',
+                'Votre compte à bien été créé'
+            );
+
+            $manager->persist($representant);
+            $manager->flush();
+
+            return $this->redirectToRoute('security.login');
+        }
+
+        return $this->render('pages/security/inscriptionRepresentant.html.twig', [
             'form' => $form->createView()
         ]);
 

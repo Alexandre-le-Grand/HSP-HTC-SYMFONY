@@ -10,29 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AdministrateurRepository::class)]
 class Administrateur extends Utilisateur
 {
-    #[ORM\Id]
-    #[ORM\ManyToOne(inversedBy: 'administrateurs')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?int $id;
-
     #[ORM\OneToMany(mappedBy: 'ref_admin', targetEntity: Utilisateur::class)]
     private Collection $utilisateurs;
 
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(?Utilisateur $id): static
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**

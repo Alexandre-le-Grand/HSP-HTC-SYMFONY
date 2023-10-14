@@ -11,14 +11,44 @@
                         <span class="visually-hidden">(current)</span>
                     </a>
                 </li>
+                {% if is_granted('ROLE_USER') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('menu.index') }}">Menu
+                        <span class="visually-hidden">(current)</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('utilisateur.index') }}">Utilisateurs
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('conference.index') }}">Conférences
                         <span class="visually-hidden">(current)</span>
                     </a>
                 </li>
+                {% endif %}
+                {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('offre_emploi.index') }}">Offres d'emploi
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('amphitheatre.index') }}">Amphithéâtres
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('type_offre.index') }}">Types d'offres
                             <span class="visually-hidden">(current)</span>
                         </a>
                     </li>
