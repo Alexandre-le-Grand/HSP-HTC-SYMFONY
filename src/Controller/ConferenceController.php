@@ -63,7 +63,7 @@ class ConferenceController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-    public function verifDateHeureConference(Conference $conference){
+    /*public function verifDateHeureConference(Conference $conference){
         $dateActuel= date("m-d-Y H:i:s");
         $finConferenceMax='12h00';
         $finConferance=$conference->getDuree()+$conference->getHeure();
@@ -77,7 +77,9 @@ class ConferenceController extends AbstractController
         else{
             echo "La conférance est envoyer a l'administrateur";
         }
-    }
+
+        if ($conference->getHeure()){}
+    }*/
 
     #[Route('/conference/validation/{id}', 'conference.validation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]

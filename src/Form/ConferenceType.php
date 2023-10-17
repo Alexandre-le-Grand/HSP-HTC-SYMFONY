@@ -34,6 +34,7 @@ class ConferenceType extends AbstractType
                     'attr' => [
                         'class' => 'form-control'
                     ],
+                'constraints' => new Assert\GreaterThan("today")
             ])
             ->add('heure', TimeType::class, [
                 'widget' => 'choice',
