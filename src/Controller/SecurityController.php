@@ -27,11 +27,10 @@ class SecurityController extends AbstractController
 
         if ($user) {
             $statut = $user->isStatut();
-            var_dump($statut);
 
             if ($statut === false) {
-                return $this->redirectToRoute('pages/access_denied/index.html.twig');
-            } elseif ($statut === true) {
+                return $this->redirectToRoute('access_denied.index');
+            } else {
                 return $this->render('pages/menu/index.html.twig');
             }
         }
@@ -41,6 +40,8 @@ class SecurityController extends AbstractController
             'error' => $authenticationUtils->getLastAuthenticationError()
         ]);
     }
+
+
 
     /**
      * This controller allow us to logout
