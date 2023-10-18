@@ -22,6 +22,14 @@ class UtilisateurController extends AbstractController
         PaginatorInterface $paginator,
         Request $request): Response
     {
+        // partie pour bloquer un utilisateur non autorisé
+        $user = $this->getUser();
+        $statut = $user->isStatut();
+
+        if ($statut === false) {
+            return $this->redirectToRoute('access_denied.index');
+        }
+        // --------------------------------------------------------------
         $utilisateur = $paginator->paginate(
             $repository->findAll(),
             $request->query->getInt('page', 1), 10

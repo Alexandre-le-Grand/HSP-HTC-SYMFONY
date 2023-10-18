@@ -23,23 +23,16 @@ class SecurityController extends AbstractController
     #[Route('/connexion', name: 'security.login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        $user = $this->getUser();
-
-        if ($user) {
-            $statut = $user->isStatut();
-
-            if ($statut === false) {
-                return $this->redirectToRoute('access_denied.index');
-            } else {
-                return $this->render('pages/menu/index.html.twig');
-            }
-        }
+       if ($this->getUser()){
+           return $this->redirectToRoute('menu.index');
+       }
 
         return $this->render('pages/security/login.html.twig', [
             'last_username' => $authenticationUtils->getLastUsername(),
             'error' => $authenticationUtils->getLastAuthenticationError()
         ]);
     }
+
 
 
 

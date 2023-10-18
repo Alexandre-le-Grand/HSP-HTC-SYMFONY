@@ -31,6 +31,15 @@ class ConferenceController extends AbstractController
         PaginatorInterface $paginator,
         Request $request): Response
     {
+        // partie pour bloquer un utilisateur non autorisé
+        $user = $this->getUser();
+        $statut = $user->isStatut();
+
+        if ($statut === false) {
+            return $this->redirectToRoute('access_denied.index');
+        }
+        // --------------------------------------------------------------
+
         $conferences = $paginator->paginate(
             $repository->findAll(), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/

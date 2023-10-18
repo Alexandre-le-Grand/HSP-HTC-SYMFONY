@@ -6,11 +6,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ path('home.index') }}">Accueil
-                        <span class="visually-hidden">(current)</span>
-                    </a>
-                </li>
+                {% if app.user is not null %}
+                    {# L'utilisateur est connecté, on n'affiche pas le lien "Accueil" #}
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('home.index') }}">Accueil
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                {% endif %}
                 {% if is_granted('ROLE_USER') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('menu.index') }}">Menu

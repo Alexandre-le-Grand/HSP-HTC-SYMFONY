@@ -4,7 +4,6 @@
 
 {% block body %}
     <div class="container mt-4">
-        <a href="{{ path('offreemploi.new') }}"><button class="btn btn-lg btn-primary" type="button">Créé une offre d'emploi</button></a>
         {% if not offres.items is same as ([]) %}
             <h1 style="text-align: center">Liste des offres d'emploi</h1>
 
@@ -13,6 +12,12 @@
                     {{ message }}
                 </div>
             {% endfor %}
+
+            {%  if is_granted('ROLE_REPRESENTANT') %}
+                <a href="{{ path('offreemploi.new') }}" class="btn btn-primary">
+                    Créer une offre d'emploi
+                </a>
+            {% endif %}
 
             <div class="count mt-4">
                 <h4 style="color: #1aa990">
