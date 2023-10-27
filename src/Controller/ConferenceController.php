@@ -123,7 +123,7 @@ class ConferenceController extends AbstractController
         return $this->redirectToRoute('conference.index');
     }
 
-    #[Route('/conference/inscription/{conference}', 'conference.inscription', methods: ['GET'])]
+    #[Route('/conference/inscription/{id}', 'conference.inscription', methods: ['GET'])]
     public function inscription(Conference $conference, EntityManagerInterface $manager): Response
     {
         $etudiant = $this->getUser();
