@@ -72,6 +72,7 @@ class UtilisateurController extends AbstractController
     public function validerUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $manager): Response
     {
         $utilisateur->setStatut(true);
+        $utilisateur->setRefAdmin($this->getUser());
         $manager->persist($utilisateur);
         $manager->flush();
 
@@ -88,6 +89,7 @@ class UtilisateurController extends AbstractController
     public function invaliderUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $manager): Response
     {
         $utilisateur->setStatut(false);
+        $utilisateur->setRefAdmin($this->getUser());
         $manager->persist($utilisateur);
         $manager->flush();
 

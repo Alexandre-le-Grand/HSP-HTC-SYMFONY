@@ -1,48 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} HSP - Menu
-    {% if is_granted('ROLE_ADMIN') %}administrateur{% endif %}
-    {% if is_granted('ROLE_ETUDIANT') %}étudiant{% endif %}
-    {% if is_granted('ROLE_REPRESENTANT') %}représentant{% endif %}
-{% endblock %}
+{% block title %} HSP - Menu {% endblock %}
 
 {% block body %}
-    <div class="container mt-4" style="text-align: center">
-        <h2>Menu
-            {% if is_granted('ROLE_ADMIN') %}Administrateur{% endif %}
-            {% if is_granted('ROLE_ETUDIANT') %}Étudiant{% endif %}
-            {% if is_granted('ROLE_REPRESENTANT') %}Représentant{% endif %}
-        </h2>
+    <div class="container mt-4 text-center">
+        <h4>Menu</h4>
         <hr class="my-4">
-        <div class="d-grid gap-2">
+        <div class="row">
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="utilisateur">
-                    <button class="btn btn-lg btn-primary" type="button">Comptes utilisateurs</button>
-                </a>
+                <div class="col-md-4" style="margin-left: 17%; display: block; text-align: center;">
+                    <a href="utilisateur">
+                        <img src="images/user_accounts.svg" alt="Comptes utilisateurs">
+                        <h4>Comptes utilisateurs</h4>
+                    </a>
+                </div>
             {% endif %}
-            <a href="conference">
-                <button class="btn btn-lg btn-primary" type="button">Conférences</button>
-            </a>
-            {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
-                <a href="offre_emploi">
-                    <button class="btn btn-lg btn-primary" type="button">Offres d'emploi</button>
+            <div class="col-md-4">
+                <a href="conference">
+                    <img src="images/conference.svg" alt="Conférences">
+                    <h4>Conférences</h4>
                 </a>
-            {% endif %}
+            </div>
             {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
-                <a>
-                    <button class="btn btn-lg btn-primary" type="button">Rendez vous</button>
-                </a>
+                <div class="col-md-4">
+                    <a href="offre_emploi">
+                        <img src="images/contract_icon.svg" alt="Offres d'emploi">
+                        <h4>Offres d'emploi</h4>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="rendez_vous">
+                        <img src="images/rdv.svg" alt="Rendez-vous">
+                        <h4>Rendez-vous</h4>
+                    </a>
+                </div>
             {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
-                <a>
-                    <button class="btn btn-lg btn-primary" type="button">Inscriptions</button>
-                </a>
-                <a href="amphitheatre">
-                    <button class="btn btn-lg btn-primary" type="button">Amphithéâtres</button>
-                </a>
-                <a href="type_offre">
-                    <button class="btn btn-lg btn-primary" type="button">Types d'offres</button>
-                </a>
+                <div class="col-md-4" style="margin-top: 5%;  margin-left: 17%; display: block; text-align: center;">
+                    <a href="amphitheatre">
+                        <img src="images/amphitheater.svg" alt="Amphithéâtres">
+                        <h4>Amphithéâtres</h4>
+                    </a>
+                </div>
+                <div class="col-md-4" style="margin-top: 5%;">
+                    <a href="type_offre">
+                        <img src="images/contract_icon.svg" alt="Types d'offres">
+                        <h4>Types d'offres</h4>
+                    </a>
+                </div>
             {% endif %}
         </div>
     </div>

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
 class Etudiant extends Utilisateur
 {
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     private ?string $domaine_etude = null;
 
     #[ORM\OneToMany(mappedBy: 'ref_etudiant', targetEntity: RendezVous::class, orphanRemoval: true)]

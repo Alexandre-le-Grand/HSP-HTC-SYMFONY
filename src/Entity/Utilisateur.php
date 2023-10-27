@@ -23,11 +23,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     #[Assert\NotBlank()]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     #[Assert\NotBlank()]
     private ?string $prenom = null;
 

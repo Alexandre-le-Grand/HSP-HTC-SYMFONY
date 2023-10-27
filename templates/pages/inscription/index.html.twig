@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HSP - Inscriptions{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        {% if not inscriptions is empty %}
+            <h2 style="text-align: center">Inscriptions pour la conférence : {{ conference.nom }}</h2>
+            <hr class="my-4">
+
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total d'inscriptions :
+                    {{ inscriptions.getTotalItemCount }}
+                </h4>
+            </div>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ID Inscription</th>
+                    <th scope="col">Nom de l'étudiant</th>
+                    <th scope="col">Domaine d'étude</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for inscription in inscriptions %}
+                    <tr class="Default">
+                        <th scope="row">{{ inscription.id }}</th>
+                        <td>{{ inscription.RefEtudiant.nom }} {{ inscription.RefEtudiant.prenom }}</td>
+                        <td>{{ inscription.RefEtudiant.domaineEtude }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(inscriptions) }}
+            </div>
+        {% else %}
+            <h4>Il n'y a pas d'inscriptions</h4>
+        {% endif %}
+    </div>
+{% endblock %}

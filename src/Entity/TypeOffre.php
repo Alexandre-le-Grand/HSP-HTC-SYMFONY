@@ -15,7 +15,7 @@ class TypeOffre
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 127, unique: true)]
     #[Assert\NotBlank()]
     private ?string $libelle = null;
 

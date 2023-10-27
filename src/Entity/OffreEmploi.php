@@ -15,13 +15,13 @@ class OffreEmploi
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     private ?string $titre = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     private ?string $type_contrat = null;
 
     #[ORM\ManyToOne(inversedBy: 'offreEmplois')]

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Conference;
+use App\Entity\Inscription;
 use App\Form\ConferenceType;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManager;
@@ -92,7 +93,7 @@ class ConferenceController extends AbstractController
 
     #[Route('/conference/validation/{id}', 'conference.validation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function validerUtilisateur(Conference $conference, EntityManagerInterface $manager): Response
+    public function validerConference(Conference $conference, EntityManagerInterface $manager): Response
     {
         $conference->setStatut(true);
         $manager->persist($conference);
@@ -108,7 +109,7 @@ class ConferenceController extends AbstractController
 
     #[Route('/conference/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function invaliderUtilisateur(Conference $conference, EntityManagerInterface $manager): Response
+    public function invaliderConference(Conference $conference, EntityManagerInterface $manager): Response
     {
         $conference->setStatut(false);
         $manager->persist($conference);
@@ -121,5 +122,50 @@ class ConferenceController extends AbstractController
 
         return $this->redirectToRoute('conference.index');
     }
+
+    #[Route('/conference/inscription/{conference}', 'conference.inscription', methods: ['GET'])]
+    public function inscription(Conference $conference, EntityManagerInterface $manager): Response
+    {
+        $etudiant = $this->getUser();
+
+        $inscription = new Inscription();
+        $inscription->setRefEtudiant($etudiant);
+        $inscription->setRefConference($conference);
+
+        $manager->persist($inscription);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'Vous avez été inscrit avec succès'
+        );
+
+        return $this->redirectToRoute('conference.index');
+    }
+
+    #[Route('/conference/desinscription/{id}', 'conference.desinscription', methods: ['GET'])]
+    public function desinscription(Conference $conference, EntityManagerInterface $manager): Response
+    {
+        $etudiant = $this->getUser();
+
+        $inscription = $manager->getRepository(Inscription::class)->findOneBy([
+            'ref_etudiant' => $etudiant,
+            'ref_conference' => $conference,
+        ]);
+
+        if ($inscription) {
+            $manager->remove($inscription);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Vous avez été désinscrit avec succès'
+            );
+
+        }
+
+        return $this->redirectToRoute('conference.index');
+    }
+
 
 }

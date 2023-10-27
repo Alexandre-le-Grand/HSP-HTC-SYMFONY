@@ -10,13 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RepresentantHRepository::class)]
 class RepresentantH extends Utilisateur
 {
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     private ?string $nom_hopital = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     private ?string $adresse = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 127)]
     private ?string $role = null;
 
     #[ORM\OneToMany(mappedBy: 'ref_representant_h', targetEntity: OffreEmploi::class, orphanRemoval: true)]
