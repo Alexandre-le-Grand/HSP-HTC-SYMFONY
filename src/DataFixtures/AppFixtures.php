@@ -90,16 +90,18 @@ class AppFixtures extends Fixture
             $conference->setNom($this->faker->word());
             $conference->setDescription($this->faker->sentence());
 
-            $date = new \DateTime('now');
-            $dateImmutable = \DateTimeImmutable::createFromMutable($date);
-            $conference->setDate($dateImmutable);
+            $date = $this->faker->dateTimeBetween('now', '+2 years');
+            $dateStr = $date->format('Y-m-d');
+            $conference->setDate($dateStr);
 
-            $heure = new \DateTime('now');
-            $heureImmutable = \DateTimeImmutable::createFromMutable($heure);
-            $conference->setHeure($heureImmutable);
+            $heure = $this->faker->dateTimeBetween('08:00', '12:00');
+            $heureStr = $heure->format('H:i');
+            $conference->setHeure($heureStr);
 
-            $interval = $this->faker->dateTimeBetween('-5 hours', '5 hours');
-            $conference->setDuree($interval->diff($heure));
+            $dureeHours = $this->faker->numberBetween(1, 5); // Par exemple, de 1 à 5 heures
+            $dureeMinutes = $this->faker->numberBetween(0, 59); // De 0 à 59 minutes
+            $duree = sprintf('%02d:%02d', $dureeHours, $dureeMinutes);
+            $conference->setDuree($duree);
 
             $conference->setStatut(false);
 
@@ -110,6 +112,7 @@ class AppFixtures extends Fixture
 
             $manager->persist($conference);
         }
+
 
         for ($i=0; $i < 10; $i++){
             $offre = new OffreEmploi();

@@ -6,7 +6,7 @@ use App\Entity\Conference;
 use App\Entity\Inscription;
 use App\Form\ConferenceType;
 use App\Repository\ConferenceRepository;
-use Doctrine\ORM\EntityManager;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -14,7 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 
 class ConferenceController extends AbstractController
 {
@@ -41,6 +40,8 @@ class ConferenceController extends AbstractController
         }
         // --------------------------------------------------------------
 
+        $currentDate = new DateTime();
+
         $conferences = $paginator->paginate(
             $repository->findAll(), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -48,7 +49,8 @@ class ConferenceController extends AbstractController
         );
 
         return $this->render('pages/conference/index.html.twig', [
-            'conferences' => $conferences
+            'conferences' => $conferences,
+            'currentDate' => $currentDate
         ]);
     }
 
@@ -59,6 +61,9 @@ class ConferenceController extends AbstractController
         EntityManagerInterface $manager) : Response
     {
         $conference = new Conference();
+        $conference->setRefUtilisateur($this->getUser());
+        $conference->setStatut(0);
+
         $form = $this->createForm(ConferenceType::class, $conference);
 
         $form->handleRequest($request);
@@ -67,29 +72,19 @@ class ConferenceController extends AbstractController
 
             $manager->persist($conference);
             $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'La conférence à été créé avec succès !'
+            );
+            return $this->redirectToRoute('conference.index');
         }
 
         return $this->render('pages/conference/new.html.twig', [
             'form' => $form->createView()
         ]);
     }
-    /*public function verifDateHeureConference(Conference $conference){
-        $dateActuel= date("m-d-Y H:i:s");
-        $finConferenceMax='12h00';
-        $finConferance=$conference->getDuree()+$conference->getHeure();
 
-
-        if ($conference->getDate()<=$dateActuel){
-            echo "Veuillez créez une conferance pour plus tard";
-        }elseif($finConferenceMax<$finConferance){
-            echo"La conferance doit finir a 12h00";
-        }
-        else{
-            echo "La conférance est envoyer a l'administrateur";
-        }
-
-        if ($conference->getHeure()){}
-    }*/
 
     #[Route('/conference/validation/{id}', 'conference.validation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]

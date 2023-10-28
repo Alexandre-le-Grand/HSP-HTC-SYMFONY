@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
 class Conference
@@ -22,14 +24,14 @@ class Conference
     #[ORM\Column(length: 127)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $date = null;
+    #[ORM\Column(type: Types::STRING)]
+    private ?string $date = null;
 
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $heure = null;
+    #[ORM\Column(type: Types::STRING)]
+    private ?string $heure = null;
 
-    #[ORM\Column]
-    private ?\DateInterval $duree = null;
+    #[ORM\Column(type: Types::STRING, length: 5)]
+    private ?string $duree = null;
 
     #[ORM\Column]
     private ?bool $statut = null;
@@ -78,36 +80,36 @@ class Conference
         return $this;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): ?string
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeImmutable $date): static
+    public function setDate(string $date): static
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getHeure(): ?\DateTimeImmutable
+    public function getHeure(): ?string
     {
         return $this->heure;
     }
 
-    public function setHeure(\DateTimeImmutable $heure): static
+    public function setHeure(string $heure): static
     {
         $this->heure = $heure;
 
         return $this;
     }
 
-    public function getDuree(): ?\DateInterval
+    public function getDuree(): ?string
     {
         return $this->duree;
     }
 
-    public function setDuree(\DateInterval $duree): static
+    public function setDuree(string $duree): static
     {
         $this->duree = $duree;
 
@@ -178,5 +180,19 @@ class Conference
         }
 
         return $this;
+    }
+
+    /**
+     * @Assert\Callback(groups={"conference_heure"})
+     */
+    public function validateHeure(ExecutionContextInterface $context)
+    {
+        $heure = $this->heure;
+        if ($heure < '08:00' || $heure > '12:00') {
+            $context
+                ->buildViolation('L\'heure de la conférence doit être entre 08:00 et 12:00.')
+                ->atPath('heure')
+                ->addViolation();
+        }
     }
 }
