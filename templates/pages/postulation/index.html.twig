@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HSP - Postulations{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        {% if not postulations is empty %}
+            <h1 style="text-align: center">Postulations à l'offre : {{ offreemploi.titre }}</h1>
+            <hr class="my-4">
+
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total de postulations :
+                    {{ postulations.getTotalItemCount }}
+                </h4>
+            </div>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ID Postulation</th>
+                    <th scope="col">Etudiant</th>
+                    <th scope="col">Domaine d'étude</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Rendez-vous</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for postulation in postulations %}
+                    <tr class="Default">
+                        <th scope="row">{{ postulation.id }}</th>
+                        <td>{{ postulation.RefEtudiant.nom }} {{ postulation.RefEtudiant.prenom }}</td>
+                        <td>{{ postulation.RefEtudiant.domaineEtude }}</td>
+                        <td>{{ postulation.RefEtudiant.email }}</td>
+                        <td>
+                            <a href="{{ path('rendez_vous.new', {'postulationId': offreemploi.id}) }}" class="btn btn-info">Proposer un rendez-vous</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(postulations) }}
+            </div>
+        {% else %}
+            <h4>Il n'y a pas de postulations</h4>
+        {% endif %}
+    </div>
+{% endblock %}

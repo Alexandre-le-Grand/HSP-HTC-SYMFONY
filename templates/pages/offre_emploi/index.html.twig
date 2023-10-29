@@ -6,6 +6,7 @@
     <div class="container mt-4">
         {% if not offres.items is same as ([]) %}
             <h1 style="text-align: center">Liste des offres d'emploi</h1>
+            <hr class="my-4">
 
             {%  for message in app.flashes('success') %}
                 <div class="alert alert-success mt-4">
@@ -33,6 +34,12 @@
                     <th scope="col">Titre</th>
                     <th scope="col">Description</th>
                     <th scope="col">Type de contrat</th>
+                    {% if is_granted('ROLE_ETUDIANT') %}
+                        <th scope="col">Postulation</th>
+                    {% endif %}
+                    {% if is_granted('REPRESENTANT') %}
+                        <th scope="col">Voir les postulations</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -41,7 +48,17 @@
                         <th scope="row">{{ offre.id }}</th>
                         <td>{{ offre.titre }}</td>
                         <td>{{ offre.description }}</td>
-                        <td>{{ offre.typecontrat }}</td>
+                        <td>{{ offre.typecontrat.libelle }}</td>
+                        {% if is_granted('ROLE_ETUDIANT') %}
+                            <td>
+                                <a href="{{ path('offre_emploi.postulation', {'id': offre.id}) }}" class="btn btn-info">Postuler</a>
+                            </td>
+                        {% endif %}
+                        {% if is_granted('ROLE_REPRESENTANT') %}
+                            <td>
+                                <a href="{{ path('postulations.index', {'id': offre.id}) }}" class="btn btn-info">Voir les postulations</a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -14,11 +14,11 @@ class RendezVous
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date = null;
+    #[ORM\Column(type: Types::STRING)]
+    private ?string $date = null;
 
-    #[ORM\Column(type: Types::TIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $heure = null;
+    #[ORM\Column(type: Types::STRING)]
+    private ?string $heure = null;
 
     #[ORM\Column]
     private ?bool $statut = null;
@@ -35,33 +35,34 @@ class RendezVous
     #[ORM\JoinColumn(nullable: false)]
     private ?OffreEmploi $ref_offre = null;
 
+    #[ORM\ManyToOne(targetEntity: Postulation::class)]
+    #[ORM\JoinColumn(name: "postulation_id", referencedColumnName: "id", nullable: false)]
+    private $postulation;
+
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): ?string
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeImmutable $date): static
+    public function setDate(?string $date): void
     {
         $this->date = $date;
-
-        return $this;
     }
 
-    public function getHeure(): ?\DateTimeImmutable
+    public function getHeure(): ?string
     {
         return $this->heure;
     }
 
-    public function setHeure(\DateTimeImmutable $heure): static
+    public function setHeure(?string $heure): void
     {
         $this->heure = $heure;
-
-        return $this;
     }
 
     public function isStatut(): ?bool
@@ -111,4 +112,28 @@ class RendezVous
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPostulation()
+    {
+        return $this->postulation;
+    }
+
+    /**
+     * @param mixed $postulation
+     */
+    public function setPostulation($postulation): void
+    {
+        $this->postulation = $postulation;
+    }
+
+    public function getEtudiant(): ?Etudiant
+    {
+        return $this->getPostulation()->getEtudiant();
+    }
+
+
+
 }

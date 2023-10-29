@@ -113,30 +113,23 @@ class AppFixtures extends Fixture
             $manager->persist($conference);
         }
 
-
-        for ($i=0; $i < 10; $i++){
-            $offre = new OffreEmploi();
-            $offre->setTitre($this->faker->jobTitle);
-            $offre->setDescription($this->faker->text(30));
-            $typesContrat = ['CDD', 'CDI', 'Stage', 'Alternance', 'Intérim', 'Freelance'];
-
-            $typeContrat = $this->faker->randomElement($typesContrat);
-            $offre->setTypeContrat($typeContrat);
-
-            $representantReference = $this->getReference('representant_id' . $i);
-            $offre->setRefRepresentantH($representantReference);
-
-            $manager->persist($offre);
-        }
-
         $typesOffre = ['CDD', 'CDI', 'Stage', 'Alternance', 'Intérim', 'Freelance'];
-        foreach ($typesOffre as $libelle) {
+
+        foreach ($typesOffre as $i => $libelle) {
             $type_offre = new TypeOffre();
             $type_offre->setLibelle($libelle);
             $manager->persist($type_offre);
+            $this->addReference('type_offre_id' . $i, $type_offre);
+
+            $offre = new OffreEmploi();
+            $offre->setTitre($this->faker->jobTitle);
+            $offre->setDescription($this->faker->text(30));
+            $typeContratReference = $this->getReference('type_offre_id' . $i);
+            $offre->setTypeContrat($typeContratReference);
+            $representantReference = $this->getReference('representant_id' . $i);
+            $offre->setRefRepresentantH($representantReference);
+            $manager->persist($offre);
         }
-
-
 
         $manager->flush();
     }

@@ -21,8 +21,9 @@ class OffreEmploi
     #[ORM\Column(length: 127)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 127)]
-    private ?string $type_contrat = null;
+    #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
+    #[ORM\JoinColumn(name: "type_contrat_id", referencedColumnName: "id")]
+    private ?TypeOffre  $type_contrat = null;
 
     #[ORM\ManyToOne(inversedBy: 'offreEmplois')]
     #[ORM\JoinColumn(nullable: false)]
@@ -69,16 +70,14 @@ class OffreEmploi
         return $this;
     }
 
-    public function getTypeContrat(): ?string
+    public function getTypeContrat(): ?TypeOffre
     {
         return $this->type_contrat;
     }
 
-    public function setTypeContrat(string $type_contrat): static
+    public function setTypeContrat(?TypeOffre $type_contrat): void
     {
         $this->type_contrat = $type_contrat;
-
-        return $this;
     }
 
     public function getRefRepresentantH(): ?RepresentantH

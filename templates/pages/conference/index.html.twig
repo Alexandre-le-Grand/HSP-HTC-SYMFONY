@@ -6,6 +6,7 @@
     <div class="container mt-4">
         {% if not conferences.items is same as ([]) %}
             <h1 style="text-align: center">Liste des conférences</h1>
+            <hr class="my-4">
 
             {%  for message in app.flashes('success') %}
                 <div class="alert alert-success mt-4">

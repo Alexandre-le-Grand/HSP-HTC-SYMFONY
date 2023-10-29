@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HSP - Rendez-vous{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 style="text-align: center">Rendez vous pour l'offre :</h1>
+        <hr class="my-4">
+
+        {% if not rendezvous is empty %}
+            <a href="{{ path('rendez_vous.new', {'postulationId': postulationId}) }}" class="btn btn-primary">
+                Créer un rendez-vous
+            </a>
+
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total de rendez-vous :
+                    {{ rendezvous.getTotalItemCount }}
+                </h4>
+            </div>
+
+            <table class="table table-hover">
+                <!-- ... -->
+            </table>
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(postulations) }}
+            </div>
+        {% else %}
+            <h4>Il n'y a pas de rendez-vous pour cette offre</h4>
+        {% endif %}
+    </div>
+{% endblock %}
+
