@@ -61,7 +61,6 @@ class OffreEmploiType extends AbstractType
                 ],
                 'label' => 'Créer l\'offre d\'emploi'
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

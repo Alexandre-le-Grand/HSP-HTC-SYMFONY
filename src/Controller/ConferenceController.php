@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Amphitheatre;
 use App\Entity\Conference;
 use App\Entity\Inscription;
+use App\Form\AmphitheatreSelectionType;
 use App\Form\ConferenceType;
 use App\Repository\ConferenceRepository;
 use DateTime;
@@ -88,18 +90,50 @@ class ConferenceController extends AbstractController
 
     #[Route('/conference/validation/{id}', 'conference.validation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function validerConference(Conference $conference, EntityManagerInterface $manager): Response
+    public function validerConference(
+        Conference $conference,
+        EntityManagerInterface $manager,
+        Request $request): Response
     {
-        $conference->setStatut(true);
-        $manager->persist($conference);
-        $manager->flush();
+        if ($conference->getRefAmphi() !== null) {
+            // Vous pouvez rediriger ou afficher une erreur ici
+        }
 
-        $this->addFlash(
-            'success',
-            'La conférence a été validée avec succès !'
-        );
+        $amphitheatreForm = $this->createForm(AmphitheatreSelectionType::class);
+        $amphitheatreForm->handleRequest($request);
 
-        return $this->redirectToRoute('conference.index');
+        if ($amphitheatreForm->isSubmitted() && $amphitheatreForm->isValid()) {
+            $selectedAmphitheatre = $amphitheatreForm->getData();
+            $conference->setRefAmphi($selectedAmphitheatre);
+            $conference->setStatut(true);
+
+            $manager->persist($conference);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'La conférence a été validée avec succès et un amphithéâtre lui a été attribué !'
+            );
+
+            return $this->redirectToRoute('conference.index');
+        }
+        return $this->render('pages/conference/select_amphitheatre.html.twig', [
+            'amphitheatreForm' => $amphitheatreForm->createView(),
+            'conference' => $conference,
+        ]);
+    }
+
+    public function selectAmphitheatre(
+        Request $request,
+        EntityManagerInterface $manager): Response
+    {
+        $amphitheatres = $manager->getRepository(Amphitheatre::class)->findAll();
+        $amphitheatreForm = $this->createForm(AmphitheatreSelectionType::class);
+
+        return $this->render('pages/conference/select_amphitheatre.html.twig', [
+            'amphitheatres' => $amphitheatres,
+            'amphitheatreForm' => $amphitheatreForm->createView(),
+        ]);
     }
 
     #[Route('/conference/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
