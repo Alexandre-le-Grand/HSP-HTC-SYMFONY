@@ -15,11 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RendezVousController extends AbstractController
 {
-    #[Route('/rendez-vous/{postulationId}', name: 'rendez_vous.index')]
-    public function index(
-        RendezVousRepository $rendezVousRepository,
-        Request $request,
-        $postulationId): Response
+    #[Route('/rendezvous/{postulationId}', name: 'rendez_vous.index')]
+    public function index(RendezVousRepository $rendezVousRepository,Request $request,$postulationId): Response
     {
         $rendezvous = $rendezVousRepository->findBy(['postulation' => $postulationId]);
 
@@ -34,7 +31,6 @@ class RendezVousController extends AbstractController
 
         return $this->render('pages/rendez_vous/index.html.twig', [
             'rendezvous' => $rendezvous,
-            'postulationId' => $postulationId,
         ]);
     }
 
