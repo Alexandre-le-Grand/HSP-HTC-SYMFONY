@@ -1,12 +1,53 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% block title %} HSP - Sélection de l'amphithéâtre{% endblock %}
+{% block title %}HSP - Amphithéatres{% endblock %}
 
 {% block body %}
     <div class="container mt-4">
-        <h1 class="mt-4" style="text-align: center">Sélection d'un amphithéâtre pour la conférence</h1>
-        <hr class="my-4">
+        {% if not amphitheatres.items is same as ([]) %}
+            <h1 style="text-align: center">Sélection d'un amphithéâtre</h1>
+            <hr class="my-4">
 
-        {{ form(amphitheatreForm) }}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success mt-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div class="count mt-4">
+                <h4 style="color: #1aa990">
+                    Nombre total d'amphithéâtres :
+                    {{ amphitheatres.getTotalItemCount }}
+                </h4>
+            </div>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Nombre de places</th>
+                    <th scope="col">Choix de l'amphithéâtre</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for amphitheatre in amphitheatres %}
+                    <tr class="Default">
+                        <th scope="row">{{ amphitheatre.id }}</th>
+                        <td>{{ amphitheatre.nom }}</td>
+                        <td>{{ amphitheatre.nbplaces }}</td>
+                        <td>
+                            <a href="{{ path('select_amphitheatre', {'amphitheatreId': amphitheatre.id}) }}" class="btn btn-info">Choisir cet amphithéâtre</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(amphitheatres) }}
+            </div>
+        {% else %}
+            <h4>Il n'y a pas d'amphithéâtres</h4>
+        {% endif %}
     </div>
 {% endblock %}

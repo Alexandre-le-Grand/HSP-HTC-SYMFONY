@@ -36,6 +36,7 @@
                     <th scope="col">Date</th>
                     <th scope="col">Heure</th>
                     <th scope="col">Durée</th>
+                    <th scope="col">Amphithéâtre</th>
                     {% if is_granted('ROLE_ETUDIANT') %}
                         <th scope="col">Inscription / Désinscription</th>
                     {% endif %}
@@ -51,6 +52,8 @@
                     {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
                     {% set conferenceDate = conference.date|date('Y-m-d') %}
                     {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
+                    {% set amphitheatre = conference.refamphi %}
+
                     <tr class="Default">
                         <th scope="row">{{ conference.id }}</th>
                         <td>{{ conference.nom }}</td>
@@ -58,28 +61,35 @@
                         <td>{{ conference.date|date('Y-m-d') }}</td>
                         <td>{{ conference.heure|date('H:i') }}</td>
                         <td>{{ conference.duree }}</td>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <td>{{ conference.statut }}</td>
-                            <td>
-                                <a href="{{ path('conference.validation', {'id': conference.id}) }}" class="btn btn-info">Valider</a>
-                                <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
-                                <a href="{{ path('inscription.index', {'id': conference.id}) }}" class="btn btn-light">Voir les inscriptions</a>
-                            </td>
-                        {% endif %}
                         <td>
-                            {% if is_granted('ROLE_ETUDIANT') and conference.statut == 1 %}
-                                {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
-                                {% set conferenceDate = conference.date|date('Y-m-d') %}
-                                {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
-
-                                {% if currentDateWithoutTime < conferenceDate %}
-                                    <a href="{{ path('conference.inscription', {'id': conference.id}) }}" class="btn btn-success">S'inscrire</a>
-                                    <a href="{{ path('conference.desinscription', {'id': conference.id}) }}" class="btn btn-danger">Se désinscrire</a>
-                                {% else %}
-                                    Inscriptions clôturées
-                                {% endif %}
+                            {% if conference.refamphi is not null %}
+                                {{ conference.refamphi.nom }}
+                            {% else %}
+                                Non attribué
+                            {% endif %}
+                        <td>{{ conference.statut }}</td>
+                        <td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('select_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre ? amphitheatre.id : null}) }}" class="btn btn-info">Valider</a>
                             {% endif %}
                         </td>
+                        <td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
+                            {% endif %}
+                        </td>
+                        {% if is_granted('ROLE_ETUDIANT') and conference.statut == 1 %}
+                            {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
+                            {% set conferenceDate = conference.date|date('Y-m-d') %}
+                            {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
+
+                            {% if currentDateWithoutTime < conferenceDate %}
+                                <a href="{{ path('conference.inscription', {'id': conference.id}) }}" class="btn btn-success">S'inscrire</a>
+                                <a href="{{ path('conference.desinscription', {'id': conference.id}) }}" class="btn btn-danger">Se désinscrire</a>
+                            {% else %}
+                                Inscriptions clôturées
+                            {% endif %}
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
