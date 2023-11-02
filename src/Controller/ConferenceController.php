@@ -144,7 +144,14 @@ class ConferenceController extends AbstractController
         Conference $conference,
         EntityManagerInterface $manager) : Response
     {
+        $amphitheatre = $conference->getRefAmphi();
+
+        if ($amphitheatre) {
+            $conference->setRefAmphi(null);
+        }
+
         $conference->setStatut(false);
+
         $manager->persist($conference);
         $manager->flush();
 
@@ -159,21 +166,33 @@ class ConferenceController extends AbstractController
     #[Route('/conference/inscription/{id}', 'conference.inscription', methods: ['GET'])]
     public function inscription(
         Conference $conference,
-        EntityManagerInterface $manager) : Response
-    {
+        EntityManagerInterface $manager
+    ) : Response {
         $etudiant = $this->getUser();
 
-        $inscription = new Inscription();
-        $inscription->setRefEtudiant($etudiant);
-        $inscription->setRefConference($conference);
+        $inscription = $manager->getRepository(Inscription::class)->findOneBy([
+            'ref_etudiant' => $etudiant,
+            'ref_conference' => $conference,
+        ]);
 
-        $manager->persist($inscription);
-        $manager->flush();
+        if ($inscription) {
+            $this->addFlash(
+                'danger',
+                'Vous êtes déjà inscrit à cette conférence.'
+            );
+        } else {
+            $inscription = new Inscription();
+            $inscription->setRefEtudiant($etudiant);
+            $inscription->setRefConference($conference);
 
-        $this->addFlash(
-            'success',
-            'Vous avez été inscrit avec succès'
-        );
+            $manager->persist($inscription);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Vous avez été inscrit avec succès'
+            );
+        }
 
         return $this->redirectToRoute('conference.index');
     }
