@@ -117,8 +117,8 @@ class ConferenceController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager)
     {
-        $conferenceId = $request->get('conferenceId');
         $amphitheatreId = $request->get('amphitheatreId');
+        $conferenceId = $request->get('conferenceId');
 
         $conference = $entityManager->getRepository(Conference::class)->find($conferenceId);
         $amphitheatre = $entityManager->getRepository(Amphitheatre::class)->find($amphitheatreId);
