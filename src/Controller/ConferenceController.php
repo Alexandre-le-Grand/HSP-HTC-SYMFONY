@@ -32,7 +32,7 @@ class ConferenceController extends AbstractController
         ConferenceRepository $repository,
         AmphitheatreRepository $amphitheatreRepository,
         PaginatorInterface $paginator,
-        Request $request): Response
+        Request $request) : Response
     {
         // partie pour bloquer un utilisateur non autorisé
         $user = $this->getUser();
@@ -45,6 +45,7 @@ class ConferenceController extends AbstractController
 
         $currentDate = new DateTime();
         $amphitheatres = $amphitheatreRepository->findAll();
+        $conferences = $repository->findAll();
 
         $conferences = $paginator->paginate(
             $repository->findAll(), /* query NOT result */
@@ -93,24 +94,28 @@ class ConferenceController extends AbstractController
 
     #[Route("/conference/selection_amphi", name: "select_amphitheatre", methods: ['GET','POST'])]
     public function indexAmphitheatre(
-        AmphitheatreRepository $repository,
+        ConferenceRepository $repository,
+        AmphitheatreRepository $amphitheatreRepository,
         PaginatorInterface $paginator,
-        Request $request,
-    ): Response
+        Request $request) : Response
     {
         $amphitheatres = $paginator->paginate(
-            $repository->findAll(), /* query NOT result */
+            $amphitheatreRepository->findAll(), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
+        $conferences = $repository->findAll();
 
         return $this->render('pages/conference/select_amphitheatre.html.twig', [
             'amphitheatres' => $amphitheatres,
+            'conferences' => $conferences,
         ]);
     }
 
     #[Route("/conference/lier_amphi", name: "lier_amphitheatre", methods: ['GET', 'POST'])]
-    public function lierAmphitheatre(Request $request, EntityManagerInterface $entityManager)
+    public function lierAmphitheatre(
+        Request $request,
+        EntityManagerInterface $entityManager)
     {
         $conferenceId = $request->get('conferenceId');
         $amphitheatreId = $request->get('amphitheatreId');
@@ -135,7 +140,9 @@ class ConferenceController extends AbstractController
 
     #[Route('/conference/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function invaliderConference(Conference $conference, EntityManagerInterface $manager): Response
+    public function invaliderConference(
+        Conference $conference,
+        EntityManagerInterface $manager) : Response
     {
         $conference->setStatut(false);
         $manager->persist($conference);
@@ -150,7 +157,9 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/inscription/{id}', 'conference.inscription', methods: ['GET'])]
-    public function inscription(Conference $conference, EntityManagerInterface $manager): Response
+    public function inscription(
+        Conference $conference,
+        EntityManagerInterface $manager) : Response
     {
         $etudiant = $this->getUser();
 
@@ -170,7 +179,9 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/desinscription/{id}', 'conference.desinscription', methods: ['GET'])]
-    public function desinscription(Conference $conference, EntityManagerInterface $manager): Response
+    public function desinscription(
+        Conference $conference,
+        EntityManagerInterface $manager) : Response
     {
         $etudiant = $this->getUser();
 

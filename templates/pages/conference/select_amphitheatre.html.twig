@@ -31,15 +31,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for amphitheatre in amphitheatres %}
-                    <tr class="Default">
-                        <th scope="row">{{ amphitheatre.id }}</th>
-                        <td>{{ amphitheatre.nom }}</td>
-                        <td>{{ amphitheatre.nbplaces }}</td>
-                        <td>
-                            <a href="{{ path('lier_amphitheatre', {'conferenceId': amphitheatre.id, 'amphitheatreId': amphitheatre.id}) }}" class="btn btn-info">Choisir cet amphithéâtre</a>
-                        </td>
-                    </tr>
+                {% for conference in conferences %}
+                    {% for amphitheatre in amphitheatres %}
+                        <tr class="Default">
+                            <th scope="row">{{ amphitheatre.id }}</th>
+                            <td>{{ amphitheatre.nom }}</td>
+                            <td>{{ amphitheatre.NbPlaces }}</td>
+                            <td>
+                                <a href="{{ path('lier_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre.id}) }}" class="btn btn-info">Choisir cet amphithéâtre</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
                 </tbody>
             </table>
