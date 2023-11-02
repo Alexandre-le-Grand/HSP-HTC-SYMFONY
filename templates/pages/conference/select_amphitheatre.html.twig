@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}HSP - Amphithéatres{% endblock %}
+{% block title %}HSP - Sélection d'un amphithéatres{% endblock %}
 
 {% block body %}
     <div class="container mt-4">
@@ -37,7 +37,7 @@
                         <td>{{ amphitheatre.nom }}</td>
                         <td>{{ amphitheatre.nbplaces }}</td>
                         <td>
-                            <a href="{{ path('select_amphitheatre', {'amphitheatreId': amphitheatre.id}) }}" class="btn btn-info">Choisir cet amphithéâtre</a>
+                            <a href="{{ path('lier_amphitheatre', {'conferenceId': amphitheatre.id, 'amphitheatreId': amphitheatre.id}) }}" class="btn btn-info">Choisir cet amphithéâtre</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Amphitheatre;
 use App\Entity\Conference;
 use App\Entity\Inscription;
 use App\Form\ConferenceType;
@@ -90,30 +91,44 @@ class ConferenceController extends AbstractController
         ]);
     }
 
+    #[Route("/conference/selection_amphi", name: "select_amphitheatre", methods: ['GET','POST'])]
+    public function indexAmphitheatre(
+        AmphitheatreRepository $repository,
+        PaginatorInterface $paginator,
+        Request $request,
+    ): Response
+    {
+        $amphitheatres = $paginator->paginate(
+            $repository->findAll(), /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
 
-    #[Route('/conference/validation/{conferenceId}', name: 'conference.validation', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function validerConference(
-        int $conferenceId,
-        int $amphitheatreId,
-        ConferenceRepository $conferenceRepository,
-        AmphitheatreRepository $amphitheatreRepository,
-        EntityManagerInterface $manager
-    ): Response {
-        $conference = $conferenceRepository->find($conferenceId);
-        $amphitheatre = $amphitheatreRepository->find($amphitheatreId);
+        return $this->render('pages/conference/select_amphitheatre.html.twig', [
+            'amphitheatres' => $amphitheatres,
+        ]);
+    }
 
+    #[Route("/conference/lier_amphi", name: "lier_amphitheatre", methods: ['GET', 'POST'])]
+    public function lierAmphitheatre(Request $request, EntityManagerInterface $entityManager)
+    {
+        $conferenceId = $request->get('conferenceId');
+        $amphitheatreId = $request->get('amphitheatreId');
+
+        $conference = $entityManager->getRepository(Conference::class)->find($conferenceId);
+        $amphitheatre = $entityManager->getRepository(Amphitheatre::class)->find($amphitheatreId);
+
+        if (!$conference || !$amphitheatre) {
+            throw $this->createNotFoundException('La conférence ou l\'amphithéâtre n\'existe pas.');
+        }
 
         $conference->setRefAmphi($amphitheatre);
         $conference->setStatut(true);
 
-        $manager->persist($conference);
-        $manager->flush();
+        $entityManager->persist($conference);
+        $entityManager->flush();
 
-        $this->addFlash(
-            'success',
-            'La conférence a été validée avec succès et un amphithéâtre lui a été attribué !'
-        );
+        $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
 
         return $this->redirectToRoute('conference.index');
     }
@@ -132,25 +147,6 @@ class ConferenceController extends AbstractController
         );
 
         return $this->redirectToRoute('conference.index');
-    }
-
-    #[Route("/conference/selection_amphi", name: "select_amphitheatre", methods: ['GET','POST'])]
-    public function selectAmphitheatre(
-        AmphitheatreRepository $repository,
-        PaginatorInterface $paginator,
-        Request $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
-        $amphitheatres = $paginator->paginate(
-            $repository->findAll(), /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            10 /*limit per page*/
-        );
-
-        return $this->render('pages/conference/select_amphitheatre.html.twig', [
-            'amphitheatres' => $amphitheatres,
-        ]);
     }
 
     #[Route('/conference/inscription/{id}', 'conference.inscription', methods: ['GET'])]

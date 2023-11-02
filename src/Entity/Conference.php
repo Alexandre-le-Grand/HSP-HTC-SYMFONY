@@ -40,7 +40,8 @@ class Conference
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $ref_utilisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'conferences')]
+    #[ORM\ManyToOne(targetEntity: Amphitheatre::class)]
+    #[ORM\JoinColumn(name: "ref_amphi_id", referencedColumnName: "id")]
     private ?Amphitheatre $ref_amphi = null;
 
     #[ORM\OneToMany(mappedBy: 'ref_conference', targetEntity: Inscription::class, orphanRemoval: true)]

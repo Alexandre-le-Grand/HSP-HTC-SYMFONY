@@ -7,54 +7,42 @@
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
                 {% if app.user is not null %}
-                    {# L'utilisateur est connecté, on n'affiche pas le lien "Accueil" #}
+                    {% if is_granted('ROLE_USER') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('menu.index') }}">Menu</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('utilisateur.index') }}">Utilisateurs</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('conference.index') }}">Conférences</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('offre_emploi.index') }}">Offres d'emploi</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('amphitheatre.index') }}">Amphithéâtres</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('type_offre.index') }}">Types d'offres</a>
+                        </li>
+                    {% endif %}
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ path('home.index') }}">Accueil
-                            <span class="visually-hidden">(current)</span>
-                        </a>
+                        <a class="nav-link active" href="{{ path('home.index') }}">Accueil</a>
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_USER') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('menu.index') }}">Menu
-                            <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('utilisateur.index') }}">Utilisateurs
-                            <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_USER') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('conference.index') }}">Conférences
-                            <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('offre_emploi.index') }}">Offres d'emploi
-                            <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('amphitheatre.index') }}">Amphithéâtres
-                            <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('type_offre.index') }}">Types d'offres
-                            <span class="visually-hidden">(current)</span>
-                        </a>
+                        <a class="nav-link" href="{{ path('security.logout') }}">Déconnexion</a>
                     </li>
                 {% endif %}
             </ul>
