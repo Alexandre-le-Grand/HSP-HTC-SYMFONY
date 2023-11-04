@@ -51,7 +51,11 @@
                         <td>{{ offre.typecontrat.libelle }}</td>
                         {% if is_granted('ROLE_ETUDIANT') %}
                             <td>
-                                <a href="{{ path('offre_emploi.postulation', {'id': offre.id}) }}" class="btn btn-info">Postuler</a>
+                                {% if offre.isAlreadyAppliedBy(app.user) %}
+                                    Vous avez postulé à cette offre.
+                                {% else %}
+                                    <a href="{{ path('offre_emploi.postulation', {'id': offre.id}) }}" class="btn btn-info">Postuler</a>
+                                {% endif %}
                             </td>
                         {% endif %}
                         {% if is_granted('ROLE_REPRESENTANT') %}

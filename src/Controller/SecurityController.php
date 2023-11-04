@@ -34,8 +34,6 @@ class SecurityController extends AbstractController
     }
 
 
-
-
     /**
      * This controller allow us to logout
      * @return void
@@ -45,6 +43,7 @@ class SecurityController extends AbstractController
     {
         // Nothing to do here...
     }
+
 
     /**
      * This controller allow us to register
@@ -79,6 +78,7 @@ class SecurityController extends AbstractController
         ]);
 
     }
+
 
     #[Route('/inscriptionRepresentant', 'security.inscriptionRepresentant', methods: ['GET', 'POST'])]
     public function inscriptionRepresentant(Request $request, EntityManagerInterface $manager) : Response

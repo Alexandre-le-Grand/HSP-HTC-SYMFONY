@@ -6,6 +6,7 @@ use App\Entity\OffreEmploi;
 use App\Entity\Postulation;
 use App\Form\OffreEmploiType;
 use App\Repository\OffreEmploiRepository;
+use App\Repository\PostulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -86,21 +87,36 @@ class OffreEmploiController extends AbstractController
     #[Route('/offre_emploi/postulation/{id}', 'offre_emploi.postulation', methods: ['GET'])]
     public function postulation (
         OffreEmploiRepository $offreEmploiRepository,
+        PostulationRepository $postulationRepository,
         EntityManagerInterface $manager,
-        $id):Response
+        $id): Response
     {
         $offreEmploi = $offreEmploiRepository->find($id);
-        $postulation = new Postulation();
-        $postulation->setRefEtudiant($this->getUser());
-        $postulation->setRefOffre($offreEmploi);
+        $user = $this->getUser();
 
-        $manager->persist($postulation);
-        $manager->flush();
+        $existingPostulation = $postulationRepository->findOneBy([
+            'refEtudiant' => $user,
+            'refOffre' => $offreEmploi
+        ]);
 
-        $this->addFlash(
-            'success',
-            'Vôtre postulation à bien été enregistrée'
-        );
+        if ($existingPostulation) {
+            $this->addFlash(
+                'warning',
+                'Vous avez déjà postulé à cette offre.'
+            );
+        } else {
+            $postulation = new Postulation();
+            $postulation->setRefEtudiant($user);
+            $postulation->setRefOffre($offreEmploi);
+
+            $manager->persist($postulation);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre postulation a bien été enregistrée.'
+            );
+        }
 
         return $this->redirectToRoute('offre_emploi.index');
     }

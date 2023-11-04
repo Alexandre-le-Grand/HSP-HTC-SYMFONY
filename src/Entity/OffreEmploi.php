@@ -29,16 +29,27 @@ class OffreEmploi
     #[ORM\JoinColumn(nullable: false)]
     private ?RepresentantH $ref_representant_h = null;
 
-    #[ORM\OneToMany(mappedBy: 'ref_offre', targetEntity: RendezVous::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'refOffre', targetEntity: RendezVous::class, orphanRemoval: true)]
     private Collection $rendezVouses;
 
-    #[ORM\OneToMany(mappedBy: 'ref_offre', targetEntity: Postulation::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'refOffre', targetEntity: Postulation::class, orphanRemoval: true)]
     private Collection $postulations;
 
     public function __construct()
     {
         $this->rendezVouses = new ArrayCollection();
         $this->postulations = new ArrayCollection();
+    }
+
+    public function isAlreadyAppliedBy(Etudiant $etudiant): bool
+    {
+        foreach ($this->postulations as $postulation) {
+            if ($postulation->getRefEtudiant() === $etudiant) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getId(): ?int

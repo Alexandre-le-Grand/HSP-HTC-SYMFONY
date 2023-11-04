@@ -33,7 +33,7 @@
                         <td>{{ postulation.RefEtudiant.domaineEtude }}</td>
                         <td>{{ postulation.RefEtudiant.email }}</td>
                         <td>
-                            <a href="{{ path('rendez_vous.new', {'postulationId': offreemploi.id}) }}" class="btn btn-info">Proposer un rendez-vous</a>
+                            <a href="{{ path('rendez_vous.new', {'postulationId': postulation.id}) }}" class="btn btn-info">Proposer un rendez-vous</a>
                         </td>
                     </tr>
                 {% endfor %}

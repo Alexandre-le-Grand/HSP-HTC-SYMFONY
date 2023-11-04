@@ -27,6 +27,11 @@
                             <a class="nav-link" href="{{ path('offre_emploi.index') }}">Offres d'emploi</a>
                         </li>
                     {% endif %}
+                    {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('rendez_vous.index') }}">Rendez-vous</a>
+                        </li>
+                    {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('amphitheatre.index') }}">Amphithéâtres</a>

@@ -1,14 +1,14 @@
-{% {% extends 'base.html.twig' %} %}
+{% extends 'base.html.twig' %}
 
+{% block title %}HSP - Rendez-vous{% endblock %}
 
-{% block body %} 
-
-<div class="container mt-4">
-        {% if not rendez_vous.items is same as ([]) %}
-            <h1 style="text-align: center">Liste des rendez vous</h1>
+{% block body %}
+    <div class="container mt-4">
+        {% if not rendezvous is empty %}
+            <h1 style="text-align: center">Liste des rendez-vous</h1>
             <hr class="my-4">
 
-            {%  for message in app.flashes('success') %}
+            {% for message in app.flashes('success') %}
                 <div class="alert alert-success mt-4">
                     {{ message }}
                 </div>
@@ -16,44 +16,69 @@
 
             <div class="count mt-4">
                 <h4 style="color: #1aa990">
-                    Nombre total de rendez vous :
-                    {{ rendez_vous.getTotalItemCount }}
+                    Nombre total de rendez-vous :
+                    {{ rendezvous.getTotalItemCount }}
                 </h4>
             </div>
 
             <table class="table table-hover">
                 <thead>
                 <tr>
+                    <th scope="col">ID</th>
                     <th scope="col">Date</th>
                     <th scope="col">Heure</th>
-                    <th scope="col">Nom Etudiant</th>
                     <th scope="col">Offre</th>
-                    <th scope="col">Statut</th>
+                    {% if is_granted('ROLE_REPRESENTANT') %}
+                        <th scope="col"> Étudiant</th>
+                        <th>Domaine d'étude</th>
+                    {% endif %}
+                    {% if is_granted('ROLE_ETUDIANT') %}
+                        <th>Actions</th>
+                    {% else %}
+                        <th>Statut</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
-                {% for rendezvous in rendezvous %}
+                {% for rendez_vous in rendezvous %}
                     <tr class="Default">
-                        <th scope="row">{{ rendez_vous.date }}</th>
+                        <th scope="row">{{ rendez_vous.id }}</th>
+                        <td>{{ rendez_vous.date }}</td>
                         <td>{{ rendez_vous.heure }}</td>
-                        <td>{{ rendez_vous.ref_etudiant_id }}</td>
-                        <td>{{ rendez_vous.ref_offre_id}}</td>
-                        <td>{{ rendez_vous.statut}}</td>
+                        <td>{{ rendez_vous.refOffre.titre }}</td>
+                        {% if is_granted('ROLE_REPRESENTANT') %}
+                            <td>{{ rendez_vous.refEtudiant.nom }} {{ rendez_vous.refEtudiant.prenom }}</td>
+                            <td>{{ rendez_vous.refEtudiant.domaineetude }}</td>
+                        {% endif %}
                         <td>
-                        
-                        </td>
-                        <td>
-                           
+                            {% if rendez_vous.statut is null %}
+                                {% if is_granted('ROLE_ETUDIANT') %}
+                                    <a href="{{ path('confirmation_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-success">Confirmer le rendez-vous</a>
+                                    <a href="{{ path('refus_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-danger">Refuser le rendez-vous</a>
+                                {% else %}
+                                    En attente de confirmation
+                                {% endif %}
+                            {% elseif rendez_vous.statut == true %}
+                                Rendez-vous confirmé par l'étudiant(e)
+                                {% if is_granted('ROLE_ETUDIANT') %}
+                                    <a href="{{ path('refus_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-danger">Refuser le rendez-vous</a>
+                                {% endif %}
+                            {% elseif rendez_vous.statut == false %}
+                                Rendez-vous refusé par l'étudiant(e)
+                                {% if is_granted('ROLE_ETUDIANT') %}
+                                    <a href="{{ path('confirmation_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-success">Confirmer le rendez-vous</a>
+                                {% endif %}
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <div class="navigation d-flex justify-content-center mt-4">
-                {{ knp_pagination_render(rendez_vous) }}
+                {{ knp_pagination_render(rendezvous) }}
             </div>
         {% else %}
-            <h4>Il n'y a pas de rendez vous</h4>
+            <h4>Il n'y a aucun rendez-vous prévu</h4>
         {% endif %}
     </div>
 {% endblock %}

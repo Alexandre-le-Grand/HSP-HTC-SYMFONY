@@ -29,7 +29,7 @@ class PostulationController extends AbstractController
         // --------------------------------------------------------------
 
         $postulations = $paginator->paginate(
-            $repository->findBy(['ref_offre' => $offreemploi]),
+            $repository->findBy(['refOffre' => $offreemploi]),
             $request->query->getInt('page', 1),
             10
         );
