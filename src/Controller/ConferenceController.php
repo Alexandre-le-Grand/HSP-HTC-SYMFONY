@@ -16,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+
 
 class ConferenceController extends AbstractController
 {
@@ -114,6 +117,7 @@ class ConferenceController extends AbstractController
 
     #[Route("/conference/lier_amphi", name: "lier_amphitheatre", methods: ['GET', 'POST'])]
     public function lierAmphitheatre(
+        MailerInterface $mailer,
         Request $request,
         EntityManagerInterface $entityManager)
     {
@@ -134,6 +138,16 @@ class ConferenceController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
+
+
+        $email = (new Email())
+            ->from('hsp.botadm@gmail.com') //email créer du bot projet (mdp :HSPpassword)
+            ->to('c.gravallon@lprs.fr')
+            ->subject('Votre conférence a été validée')
+            ->text('Votre conférence a été validée avec succès.');
+
+        $mailer->send($email);
+
 
         return $this->redirectToRoute('conference.index');
     }
