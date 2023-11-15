@@ -32,10 +32,9 @@
                         <th scope="col"> Étudiant</th>
                         <th>Domaine d'étude</th>
                     {% endif %}
+                    <th>Statut</th>
                     {% if is_granted('ROLE_ETUDIANT') %}
                         <th>Actions</th>
-                    {% else %}
-                        <th>Statut</th>
                     {% endif %}
                 </tr>
                 </thead>
@@ -52,19 +51,24 @@
                         {% endif %}
                         <td>
                             {% if rendez_vous.statut is null %}
+                                En attente de confirmation
+                            {% elseif rendez_vous.statut == 0 %}
+                                A confirmer
+                            {% elseif rendez_vous.statut == 1 %}
+                                Confirmé
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if rendez_vous.statut is null %}
                                 {% if is_granted('ROLE_ETUDIANT') %}
                                     <a href="{{ path('confirmation_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-success">Confirmer le rendez-vous</a>
                                     <a href="{{ path('refus_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-danger">Refuser le rendez-vous</a>
-                                {% else %}
-                                    En attente de confirmation
                                 {% endif %}
                             {% elseif rendez_vous.statut == true %}
-                                Rendez-vous confirmé par l'étudiant(e)
                                 {% if is_granted('ROLE_ETUDIANT') %}
                                     <a href="{{ path('refus_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-danger">Refuser le rendez-vous</a>
                                 {% endif %}
                             {% elseif rendez_vous.statut == false %}
-                                Rendez-vous refusé par l'étudiant(e)
                                 {% if is_granted('ROLE_ETUDIANT') %}
                                     <a href="{{ path('confirmation_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-success">Confirmer le rendez-vous</a>
                                 {% endif %}

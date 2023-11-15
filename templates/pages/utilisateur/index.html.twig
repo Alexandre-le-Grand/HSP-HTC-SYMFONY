@@ -29,7 +29,6 @@
                     <th scope="col">Prénom</th>
                     <th scope="col">Email</th>
                     <th scope="col">Statut</th>
-                    <th scope="col" style="max-width: 100px; overflow: hidden;">Mot de passe</th>
                     <th scope="col">Rôle</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -41,18 +40,36 @@
                         <td>{{ utilisateur.nom }}</td>
                         <td>{{ utilisateur.prenom }}</td>
                         <td>{{ utilisateur.email }}</td>
-                        <td>{{ utilisateur.statut }}</td>
-                        <td style="max-width: 600px">{{ utilisateur.password }}</td>
                         <td>
+                            {% if utilisateur.statut == 1 %}
+                                valide
+                            {% elseif utilisateur.statut == 0 %}
+                                invalide
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set roles = [] %}
                             {% for role in utilisateur.roles %}
-                                {{ role }}
-                                {% if not loop.last %}, {% endif %}
+                                {% if role == 'ROLE_ADMIN' %}
+                                    {% set roles = roles|merge(['administrateur']) %}
+                                {% elseif role == 'ROLE_ETUDIANT' %}
+                                    {% set roles = roles|merge(['étudiant']) %}
+                                {% elseif role == 'ROLE_REPRESENTANT' %}
+                                    {% set roles = roles|merge(['représentant']) %}
+                                {% endif %}
                             {% endfor %}
+
+                            {{ roles|join(', ') }}
                         </td>
                         <td>
                             <div class="d-flex">
-                                <a href="{{ path('utilisateur.validation', {'id': utilisateur.id}) }}" class="btn btn-info">Valider</a>
-                                <a href="{{ path('utilisateur.invalidation', {'id': utilisateur.id}) }}" class="btn btn-danger">Invalider</a>
+                                {% if utilisateur.statut == 0 %}
+                                    <a href="{{ path('utilisateur.validation', {'id': utilisateur.id}) }}" class="btn btn-info">Valider</a>
+                                {% endif %}
+
+                                {% if utilisateur.statut == 1 %}
+                                    <a href="{{ path('utilisateur.invalidation', {'id': utilisateur.id}) }}" class="btn btn-danger">Invalider</a>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>

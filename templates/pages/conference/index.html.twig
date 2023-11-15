@@ -69,14 +69,21 @@
                             {% endif %}
                         </td>
                         {% if is_granted('ROLE_ADMIN') %}
-                        <td>{{ conference.statut }}</td>
-                        <td>
-                            <a href="{{ path('select_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre ? amphitheatre.id : null}) }}" class="btn btn-info">Valider</a>
-                        </td>
-                        <td>
-                            <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
-                            {% endif %}
-                        </td>
+                            <td>
+                                {% if conference.statut == 0 %}
+                                    Invalide
+                                {% elseif conference.statut == 1 %}
+                                    Valide
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if conference.statut == 0 %}
+                                    <a href="{{ path('select_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre ? amphitheatre.id : null}) }}" class="btn btn-info">Valider</a>
+                                {% elseif conference.statut == 1 %}
+                                    <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
+                                {% endif %}
+                            </td>
+                        {% endif %}
                         <td>
                             {% if is_granted('ROLE_ETUDIANT') and conference.statut == 1 %}
                                 {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
@@ -98,7 +105,6 @@
                                             Aucune place disponible
                                         {% endif %}
                                     {% else %}
-                                        Inscrit(e)
                                         <a href="{{ path('conference.desinscription', {'id': conference.id}) }}" class="btn btn-danger">Se désinscrire</a>
                                     {% endif %}
                                 {% else %}
