@@ -2,6 +2,11 @@
 
 {% block title %}HSP - Utilisateurs{% endblock %}
 
+{% block datatable_styles %}
+    {{ parent() }}
+    <!-- Ajouter des styles spécifiques à DataTables si nécessaire -->
+{% endblock %}
+
 {% block body %}
     <div class="container mt-4">
         {% if not utilisateur.items is same as ([]) %}
@@ -21,7 +26,7 @@
                 </h4>
             </div>
 
-            <table class="table table-hover">
+            <table class="table table-hover" id="dataTable">
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
@@ -84,4 +89,13 @@
             <h4>Il n'y a pas d'utilisateurs</h4>
         {% endif %}
     </div>
+{% endblock %}
+{% block datatable_scripts %}
+    {{ parent() }}
+    <!-- Initialisation de DataTables -->
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable();
+        });
+    </script>
 {% endblock %}

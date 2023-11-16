@@ -10,3 +10,12 @@
         {{ form(form) }}
     </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            // Activer Select2 sur le champ de date
+            $('.select2').select2();
+        });
+    </script>
+{% endblock %}

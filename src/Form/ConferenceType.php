@@ -39,7 +39,7 @@ class ConferenceType extends AbstractType
             ->add('date', ChoiceType::class, [
                 'choices' => $this->generateDateChoices(),
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control select2',
                 ],
                 'label' => 'Date de la conférence :',
                 'label_attr' => [
