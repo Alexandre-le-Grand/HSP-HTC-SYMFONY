@@ -41,7 +41,7 @@ class ConferenceType extends AbstractType
                 'attr' => [
                     'class' => 'form-control select2',
                 ],
-                'label' => 'Date de la conférence :',
+                'label' => 'Date de la conférence :\n',
                 'label_attr' => [
                     'class' => 'form-label mt-4',
                 ],
@@ -106,7 +106,7 @@ class ConferenceType extends AbstractType
         while ($startDate <= $endDate) {
             // Vérifier si la date est un jour de la semaine (mardi à samedi)
             if ($startDate->format('N') >= 2 && $startDate->format('N') <= 6) {
-                $dateString = $startDate->format('Y-m-d');
+                $dateString = $startDate->format('d-m-Y');
                 $dates[$dateString] = $dateString;
             }
             $startDate->add($interval);

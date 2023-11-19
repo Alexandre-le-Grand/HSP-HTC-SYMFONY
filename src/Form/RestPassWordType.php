@@ -17,6 +17,7 @@ class RestPassWordType extends AbstractType
 
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'exemple@hsp.fr',
                 ],
                 'label' => 'Adresse mail :',
                 'label_attr' => [

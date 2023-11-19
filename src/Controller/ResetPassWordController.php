@@ -48,7 +48,7 @@ class ResetPassWordController extends AbstractController
             }
         }
 
-        return $this->render('reset_password/index.html.twig', [
+        return $this->render('pages/reset_password/index.html.twig', [
             'form' => $form->createView(),
         ]);
     }

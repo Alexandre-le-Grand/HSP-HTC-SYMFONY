@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HSP - Créer un utilisateur{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 style="text-align: center">Création d'un utilisateur</h1>
+        <hr class="my-4">
+
+        {{ form_start(form) }}
+
+        <div class="form-group">
+            {{ form_label(form.roles) }}
+            {{ form_widget(form.roles, {'attr': {'class': 'role-select'}}) }}
+            {{ form_errors(form.roles) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom) }}
+            {{ form_errors(form.nom) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.prenom) }}
+            {{ form_widget(form.prenom) }}
+            {{ form_errors(form.prenom) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email) }}
+            {{ form_errors(form.email) }}
+        </div>
+
+        {% if form.domaineEtude is defined %}
+            <div class="form-group" id="domain-container">
+                {{ form_label(form.domaineEtude) }}
+                {{ form_widget(form.domaineEtude) }}
+                {{ form_errors(form.domaineEtude) }}
+            </div>
+        {% endif %}
+
+        {% if form.nomHopital is defined %}
+            <div class="form-group" id="nom-hopital-container">
+                {{ form_label(form.nomHopital) }}
+                {{ form_widget(form.nomHopital) }}
+                {{ form_errors(form.nomHopital) }}
+            </div>
+        {% endif %}
+
+        {% if form.roleRepresentant is defined %}
+            <div class="form-group" id="adresse-hopital-container">
+                {{ form_label(form.adresseHopital) }}
+                {{ form_widget(form.adresseHopital) }}
+                {{ form_errors(form.adresseHopital) }}
+            </div>
+        {% endif %}
+
+        {% if form.roleRepresentant is defined %}
+            <div class="form-group" id="role-representant-container">
+                {{ form_label(form.roleRepresentant) }}
+                {{ form_widget(form.roleRepresentant) }}
+                {{ form_errors(form.roleRepresentant) }}
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form_widget(form.plainPassword) }}
+            {{ form_errors(form.plainPassword) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_widget(form.submit) }}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Cache les champs au chargement de la page
+            console.log('Hide containers');
+            $('#domain-container').hide();
+            $('#nom-hopital-container').hide();
+            $('#adresse-hopital-container').hide();
+            $('#role-representant-container').hide();
+
+            // Affiche ou masque les champs en fonction du choix du rôle
+            $('.role-select').change(function() {
+                console.log('rôle sélectionné:', $(this).val());
+
+                console.log('Toggle containers');
+                $('#domain-container').toggle($(this).val().includes('ROLE_ETUDIANT'));
+                $('#nom-hopital-container').toggle($(this).val().includes('ROLE_REPRESENTANT'));
+                $('#adresse-hopital-container').toggle($(this).val().includes('ROLE_REPRESENTANT'));
+                $('#role-representant-container').toggle($(this).val().includes('ROLE_REPRESENTANT'));
+            });
+        });
+    </script>
+{% endblock %}

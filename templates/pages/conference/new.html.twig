@@ -7,9 +7,19 @@
         <h1 class="mt-4" style="text-align: center">Création d'une conférence</h1>
         <hr class="my-4">
 
-        {{ form(form) }}
+        {{ form_start(form) }}
+        {{ form_row(form.nom, {'label': 'Nom de la conférence :'}) }}
+        {{ form_row(form.description, {'label': 'Description :'}) }}
+
+        {# Personnalisation du champ de date ici #}
+        {{ form_row(form.date, {'label': 'Date de la conférence :'})|raw }}
+
+        {{ form_row(form.heure, {'label': 'Heure de la conférence :'}) }}
+        {{ form_row(form.duree, {'label': 'Durée de la conférence :'}) }}
+        {{ form_end(form) }}
     </div>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script>

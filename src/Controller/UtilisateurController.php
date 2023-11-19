@@ -40,6 +40,36 @@ class UtilisateurController extends AbstractController
         ]);
     }
 
+    #[Route('utilisateur/nouveau', 'utilisateur.new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function new (
+        Request $request,
+        EntityManagerInterface $manager) : Response
+    {
+        $utilisateur = new Utilisateur();
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            $utilisateur = $form->getData();
+
+            $utilisateur->setStatut(1);
+
+            $manager->persist($utilisateur);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'L\'utilisateur à été créé avec succès !'
+            );
+            return $this->redirectToRoute('utilisateur.index');
+        }
+
+        return $this->render('pages/utilisateur/new.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
     #[Route('/utilisateur/edition/{id}', 'utilisateur.edit', methods: ['GET', 'POST'])]
     public function edit(
         Utilisateur $utilisateur,

@@ -59,65 +59,73 @@
                     {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
                     {% set amphitheatre = conference.refamphi %}
 
-                    <tr class="Default">
-                        <th scope="row">{{ conference.id }}</th>
-                        <td>{{ conference.nom }}</td>
-                        <td>{{ conference.description }}</td>
-                        <td>{{ conference.date|date('Y-m-d') }}</td>
-                        <td>{{ conference.heure|date('H:i') }}</td>
-                        <td>{{ conference.duree }}</td>
-                        <td>
-                            {% if conference.refamphi is not null %}
-                                {{ conference.refamphi.nom }}
-                            {% else %}
-                                Non attribué
+                    {% if is_granted('ROLE_ADMIN')
+                        or is_granted('ROLE_ETUDIANT') and conference.statut == 1
+                        or is_granted('ROLE_REPRESENTANT' and conference.statut == 1)
+                        or conference.refUtilisateur == app.user%}
+                        <tr class="Default">
+                            <th scope="row">{{ conference.id }}</th>
+                            <td>{{ conference.nom }}</td>
+                            <td>{{ conference.description }}</td>
+                            <td>{{ conference.date|date('Y-m-d') }}</td>
+                            <td>{{ conference.heure|date('H:i') }}</td>
+                            <td>{{ conference.duree }}</td>
+                            <td>
+                                {% if conference.refamphi is not null %}
+                                    {{ conference.refamphi.nom }}
+                                {% else %}
+                                    Non attribué
+                                {% endif %}
+                            </td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <td>
+                                    {% if conference.statut == 0 %}
+                                        invalide
+                                    {% elseif conference.statut == 1 %}
+                                        valide
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if conference.statut == 0 %}
+                                        <a href="{{ path('select_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre ? amphitheatre.id : null}) }}" class="btn btn-info">Valider</a>
+                                    {% elseif conference.statut == 1 %}
+                                        <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
+                                    {% endif %}
+                                </td>
                             {% endif %}
-                        </td>
-                        {% if is_granted('ROLE_ADMIN') %}
                             <td>
-                                {% if conference.statut == 0 %}
-                                    Invalide
-                                {% elseif conference.statut == 1 %}
-                                    Valide
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if conference.statut == 0 %}
-                                    <a href="{{ path('select_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre ? amphitheatre.id : null}) }}" class="btn btn-info">Valider</a>
-                                {% elseif conference.statut == 1 %}
-                                    <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
-                                {% endif %}
-                            </td>
-                        {% endif %}
-                        <td>
-                            {% if is_granted('ROLE_ETUDIANT') and conference.statut == 1 %}
-                                {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
-                                {% set conferenceDate = conference.date|date('Y-m-d') %}
-                                {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
+                                {% if is_granted('ROLE_ETUDIANT') and conference.statut == 1 %}
+                                    {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
+                                    {% set conferenceDate = conference.date|date('Y-m-d') %}
+                                    {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
 
-                                {% if currentDateWithoutTime < conferenceDate %}
-                                    {% set isUserRegistered = false %}
-                                    {% for inscription in conference.inscriptions %}
-                                        {% if inscription.getRefEtudiant == app.user %}
-                                            {% set isUserRegistered = true %}
-                                        {% endif %}
-                                    {% endfor %}
+                                    {% if currentDateWithoutTime < conferenceDate %}
+                                        {% set isUserRegistered = false %}
+                                        {% for inscription in conference.inscriptions %}
+                                            {% if inscription.getRefEtudiant == app.user %}
+                                                {% set isUserRegistered = true %}
+                                            {% endif %}
+                                        {% endfor %}
 
-                                    {% if not isUserRegistered %}
-                                        {% if conference.inscriptions.count < conference.refAmphi.NbPlaces %}
-                                            <a href="{{ path('conference.inscription', {'id': conference.id}) }}" class="btn btn-success">S'inscrire</a>
+                                        {% if not isUserRegistered %}
+                                            {% if conference.inscriptions.count < conference.refAmphi.NbPlaces %}
+                                                <a href="{{ path('conference.inscription', {'id': conference.id}) }}" class="btn btn-success">S'inscrire</a>
+                                            {% else %}
+                                                Aucune place disponible
+                                            {% endif %}
                                         {% else %}
-                                            Aucune place disponible
+                                            <a href="{{ path('conference.desinscription', {'id': conference.id}) }}" class="btn btn-danger">Se désinscrire</a>
                                         {% endif %}
                                     {% else %}
-                                        <a href="{{ path('conference.desinscription', {'id': conference.id}) }}" class="btn btn-danger">Se désinscrire</a>
+                                        Inscriptions clôturées
                                     {% endif %}
-                                {% else %}
-                                    Inscriptions clôturées
                                 {% endif %}
-                            {% endif %}
-                        </td>
-                    </tr>
+                                {% if is_granted('ROLE_ETUDIANT') and conference.statut == 0 %}
+                                    En attente de validation
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
