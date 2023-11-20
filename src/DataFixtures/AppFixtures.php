@@ -7,6 +7,7 @@ use App\Entity\Amphitheatre;
 use App\Entity\Conference;
 use App\Entity\Etudiant;
 use App\Entity\OffreEmploi;
+use App\Entity\Postulation;
 use App\Entity\RepresentantH;
 use App\Entity\TypeOffre;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -33,6 +34,7 @@ class AppFixtures extends Fixture
             $admin->setStatut(1);
             $admin->setRoles(['ROLE_ADMIN']);
             $admin->setPlainpassword('password');
+            $admin->setResetToken(null);
 
             // Pour le premier administrateur, pas de référence à un autre administrateur
             if ($i > 0) {
@@ -54,6 +56,7 @@ class AppFixtures extends Fixture
             $etudiant->setPlainpassword('password');
             $domainesEtude = ['Chirurgie', 'Pédiatrie','Cardiologie','Dermatologie','Ophtalmologie','Neurologie','Radiologie','Psychiatrie','Orthopédie', 'Gastro-entérologie','Urologie','Néphrologie','Endocrinologie','Rhumatologie','Hématologie', 'Oncologie','Infectiologie' ,'Anesthésiologie'];
             $etudiant->setDomaineEtude($this->faker->randomElement($domainesEtude));
+            $etudiant->setResetToken(null);
 
             $manager->persist($etudiant);
             $this->addReference('etudiant_id' . $i, $etudiant);
@@ -70,6 +73,7 @@ class AppFixtures extends Fixture
             $representant->setNomHopital($this->faker->lastName);
             $representant->setAdresse($this->faker->address);
             $representant->setRole($this->faker->jobTitle);
+            $representant->setResetToken(null);
 
             $manager->persist($representant);
             $this->addReference('representant_id' . $i, $representant);
@@ -129,6 +133,22 @@ class AppFixtures extends Fixture
             $representantReference = $this->getReference('representant_id' . $i);
             $offre->setRefRepresentantH($representantReference);
             $manager->persist($offre);
+
+            // Générer 5 postulations pour chaque offre d'emploi avec un étudiant au hasard
+            $etudiant = $this->getReference('etudiant_id' . $i);
+            $postedStudents = [];
+
+            for ($j = 0; $j < 5; $j++) {
+                // Vérifier si l'étudiant a déjà postulé à cette offre d'emploi
+                if (!in_array($etudiant, $postedStudents)) {
+                    $postedStudents[] = $etudiant;
+
+                    $postulation = new Postulation();
+                    $postulation->setRefEtudiant($etudiant);
+                    $postulation->setRefOffre($offre);
+                    $manager->persist($postulation);
+                }
+            }
         }
 
         $manager->flush();

@@ -73,6 +73,7 @@ class RendezVousController extends AbstractController
         $rendezVous = new RendezVous();
         $rendezVous->setRefRepresentantH($this->getUser());
         $rendezVous->setPostulation($postulation);
+        $rendezVous->setStatut(false);
 
         if ($postulation) {
             $etudiant = $postulation->getRefEtudiant();

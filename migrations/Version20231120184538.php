@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231029154643 extends AbstractMigration
+final class Version20231120184538 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -30,7 +30,7 @@ final class Version20231029154643 extends AbstractMigration
         $this->addSql('CREATE TABLE rendez_vous (id INT AUTO_INCREMENT NOT NULL, ref_representant_h_id INT NOT NULL, ref_etudiant_id INT NOT NULL, ref_offre_id INT NOT NULL, postulation_id INT NOT NULL, date VARCHAR(255) NOT NULL, heure VARCHAR(255) NOT NULL, statut TINYINT(1) NOT NULL, INDEX IDX_65E8AA0A6A0FC1D8 (ref_representant_h_id), INDEX IDX_65E8AA0A27E3492F (ref_etudiant_id), INDEX IDX_65E8AA0ACADF96DD (ref_offre_id), INDEX IDX_65E8AA0AD749FDF1 (postulation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE representant_h (id INT NOT NULL, nom_hopital VARCHAR(127) NOT NULL, adresse VARCHAR(127) NOT NULL, role VARCHAR(127) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE type_offre (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(127) NOT NULL, UNIQUE INDEX UNIQ_A18A0198A4D60759 (libelle), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE utilisateur (id INT AUTO_INCREMENT NOT NULL, ref_admin_id INT DEFAULT NULL, nom VARCHAR(127) NOT NULL, prenom VARCHAR(127) NOT NULL, email VARCHAR(180) NOT NULL, statut TINYINT(1) NOT NULL, password VARCHAR(255) NOT NULL, roles JSON NOT NULL, type VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_1D1C63B3E7927C74 (email), INDEX IDX_1D1C63B3E23C4497 (ref_admin_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE utilisateur (id INT AUTO_INCREMENT NOT NULL, ref_admin_id INT DEFAULT NULL, nom VARCHAR(127) NOT NULL, prenom VARCHAR(127) NOT NULL, email VARCHAR(180) NOT NULL, statut TINYINT(1) NOT NULL, password VARCHAR(255) NOT NULL, reset_token VARCHAR(100) DEFAULT NULL, roles JSON NOT NULL, type VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_1D1C63B3E7927C74 (email), INDEX IDX_1D1C63B3E23C4497 (ref_admin_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE messenger_messages (id BIGINT AUTO_INCREMENT NOT NULL, body LONGTEXT NOT NULL, headers LONGTEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL, available_at DATETIME NOT NULL, delivered_at DATETIME DEFAULT NULL, INDEX IDX_75EA56E0FB7336F0 (queue_name), INDEX IDX_75EA56E0E3BD61CE (available_at), INDEX IDX_75EA56E016BA31DB (delivered_at), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE administrateur ADD CONSTRAINT FK_32EB52E8BF396750 FOREIGN KEY (id) REFERENCES utilisateur (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE conference ADD CONSTRAINT FK_911533C8B61ED040 FOREIGN KEY (ref_utilisateur_id) REFERENCES utilisateur (id)');

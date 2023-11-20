@@ -48,8 +48,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank()]
     private ?string $password = 'password';
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private $resetToken;
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private ?string $resetToken  = null;
 
 
     #[ORM\Column(type: 'json')]
@@ -199,21 +199,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainpassword = $plainpassword;
     }
 
-    /**
-     * @return mixed
-     */
     public function getResetToken(): ?string
     {
         return $this->resetToken;
     }
 
-    public function setResetToken(?string $resetToken): self
+    public function setResetToken(?string $resetToken): void
     {
         $this->resetToken = $resetToken;
-
-        return $this;
     }
-
 
     /**
      * @return Collection<int, Conference>
