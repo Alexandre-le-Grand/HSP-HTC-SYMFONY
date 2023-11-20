@@ -61,8 +61,8 @@
 
                     {% if is_granted('ROLE_ADMIN')
                         or is_granted('ROLE_ETUDIANT') and conference.statut == 1
-                        or is_granted('ROLE_REPRESENTANT' and conference.statut == 1)
-                        or conference.refUtilisateur == app.user%}
+                        or is_granted('ROLE_REPRESENTANT') and conference.statut == 1
+                        or conference.refUtilisateur == app.user %}
                         <tr class="Default">
                             <th scope="row">{{ conference.id }}</th>
                             <td>{{ conference.nom }}</td>
