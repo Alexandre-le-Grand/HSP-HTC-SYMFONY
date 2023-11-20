@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 
 class ConferenceController extends AbstractController
@@ -138,8 +140,7 @@ class ConferenceController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
-
-
+        /*
         $email = (new Email())
             ->from('hsp.botadm@gmail.com') //email créer du bot projet (mdp :HSPpassword)
             ->to('c.gravallon@lprs.fr')
@@ -147,6 +148,25 @@ class ConferenceController extends AbstractController
             ->text('Votre conférence a été validée avec succès.');
 
         $mailer->send($email);
+
+*/
+
+        $destinataire = "SELECT utilisateur.email FROM utilisateur JOIN conference ON utilisateur.id=conference.ref_utilisateur_id ";
+        $sujet = "Confirmation de conference";
+        $message = "Votre conference est validé avec succès";
+
+// En-têtes additionnels
+        $headers = "De: bot@hsp.com";
+
+// Envoi de l'e-mail
+        $mailEnvoye = mail($destinataire, $sujet, $message, $headers);
+
+// Vérification si l'e-mail a été envoyé avec succès
+        if ($mailEnvoye) {
+            echo "L'e-mail a été envoyé avec succès.";
+        } else {
+            echo "Échec de l'envoi de l'e-mail. Veuillez vérifier la configuration de votre serveur.";
+        }
 
 
         return $this->redirectToRoute('conference.index');
