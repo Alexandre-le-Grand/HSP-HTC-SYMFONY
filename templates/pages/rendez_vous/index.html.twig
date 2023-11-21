@@ -61,25 +61,21 @@
                         {% endif %}
                         <td>
                             {% if rendez_vous.statut is null %}
-                                En attente de confirmation
+                                Attente de confirmation
                             {% elseif rendez_vous.statut == 0 %}
-                                A confirmer
+                                Refusé
                             {% elseif rendez_vous.statut == 1 %}
                                 Confirmé
                             {% endif %}
                         </td>
                         <td>
-                            {% if rendez_vous.statut is null %}
-                                {% if is_granted('ROLE_ETUDIANT') %}
+                            {% if is_granted('ROLE_ETUDIANT') %}
+                                {% if rendez_vous.statut is null %}
                                     <a href="{{ path('confirmation_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-success">Confirmer le rendez-vous</a>
                                     <a href="{{ path('refus_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-danger">Refuser le rendez-vous</a>
-                                {% endif %}
-                            {% elseif rendez_vous.statut == true %}
-                                {% if is_granted('ROLE_ETUDIANT') %}
+                                {% elseif rendez_vous.statut == true %}
                                     <a href="{{ path('refus_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-danger">Refuser le rendez-vous</a>
-                                {% endif %}
-                            {% elseif rendez_vous.statut == false %}
-                                {% if is_granted('ROLE_ETUDIANT') %}
+                                {% elseif rendez_vous.statut == false %}
                                     <a href="{{ path('confirmation_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-success">Confirmer le rendez-vous</a>
                                 {% endif %}
                             {% endif %}
@@ -103,27 +99,15 @@
     <script>
         $(document).ready(function() {
             var columns = [
-                { "data": "id" }, // ID
-                { "data": "date" }, // Date
-                { "data": "heure" }, // Heure
-                { "data": "refOffre.titre" }, // Offre
+                { "data": "id" },
+                { "data": "date" },
+                { "data": "heure" },
+                { "data": "refOffre.titre" },
                 {% if is_granted('ROLE_REPRESENTANT') %}
-                { "data": "refEtudiant.nom" }, // Étudiant
-                { "data": "refEtudiant.domaineetude" }, // Domaine d'étude
+                { "data": "refEtudiant.nom" },
+                { "data": "refEtudiant.domaineetude" },
                 {% endif %}
-                {
-                    "data": "statut",
-                    "render": function (data, type, row) {
-                        if (data === null) {
-                            return "En attente de confirmation";
-                        } else if (data === 0) {
-                            return "A confirmer";
-                        } else if (data === 1) {
-                            return "Confirmé";
-                        }
-                        return "";
-                    }
-                }, // Statut
+                { "data": "statut" },
                 {
                     "data": null,
                     "render": function (data, type, row) {
@@ -138,7 +122,7 @@
                         }
                         return actions;
                     }
-                } // Actions
+                }
             ];
 
             var dataTable = $('#dataTable').DataTable({
