@@ -51,10 +51,13 @@
                     </li>
                 {% endif %}
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-sm-2" type="search" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
+
+            {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('utilisateur.profile') }}">
+            <img src="{{ asset('images/user_profile.svg') }}">
+            </a>
+            {% endif %}
+
         </div>
     </div>
 </nav>

@@ -42,12 +42,14 @@
                     <th scope="col">Heure</th>
                     <th scope="col">Durée</th>
                     <th scope="col">Amphithéâtre</th>
+                    <th scope="col">Modification</th>
                     {% if is_granted('ROLE_ETUDIANT') %}
                         <th scope="col">Inscription / Désinscription</th>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                         <th scope="col">Statut</th>
                         <th scope="col">Actions</th>
+                        <th>Suppression</th>
                     {% endif %}
                 </tr>
                 </thead>
@@ -77,6 +79,11 @@
                                     Non attribué
                                 {% endif %}
                             </td>
+                            {% if is_granted('ROLE_USER') and conference.refUtilisateur == app.user %}
+                                <td>
+                                    <a href="{{ path('conference.modification', {'id': conference.id}) }}" class="btn btn-info">Modifier</a>
+                                </td>
+                            {% endif %}
                             {% if is_granted('ROLE_ADMIN') %}
                                 <td>
                                     {% if conference.statut == 0 %}
@@ -87,10 +94,13 @@
                                 </td>
                                 <td>
                                     {% if conference.statut == 0 %}
-                                        <a href="{{ path('select_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre ? amphitheatre.id : null}) }}" class="btn btn-info">Valider</a>
+                                        <a href="{{ path('select_amphitheatre', {'conferenceId': conference.id, 'amphitheatreId': amphitheatre ? amphitheatre.id : null}) }}" class="btn btn-success">Valider</a>
                                     {% elseif conference.statut == 1 %}
-                                        <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-danger">Invalider</a>
+                                        <a href="{{ path('conference.invalidation', {'id': conference.id}) }}" class="btn btn-info">Invalider</a>
                                     {% endif %}
+                                <td>
+                                    <a href="{{ path('conference.suppression', {'id': conference.id}) }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette conférence ?')">Supprimer</a>
+                                </td>
                                 </td>
                             {% endif %}
                             <td>
@@ -144,9 +154,9 @@
         $(document).ready(function() {
             $('#dataTable').DataTable({
                 "aoColumnDefs": [
-                    { "bSortable": false, "aTargets": [0, 1, 2, 3, 4, 5, 6,
-                            {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}7{% endif %}
-                            {% if is_granted('ROLE_ADMIN') %}, 8, 9{% endif %} ] }
+                    { "bSortable": false, "aTargets": [0, 1, 2, 3, 4, 5, 6, 7
+                            {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}8{% endif %}
+                            {% if is_granted('ROLE_ADMIN') %}9, 10{% endif %} ] }
                 ]
             });
         });

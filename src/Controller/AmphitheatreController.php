@@ -91,6 +91,7 @@ class AmphitheatreController extends AbstractController
     {
         $form = $this->createForm(AmphitheatreType::class, $amphitheatre);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()){
             $amphitheatre = $form->getData();
 

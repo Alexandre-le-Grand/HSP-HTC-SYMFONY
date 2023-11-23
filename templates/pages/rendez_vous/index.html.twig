@@ -68,7 +68,7 @@
                                 Confirmé
                             {% endif %}
                         </td>
-                        <td>
+                        <td data-roles="{{ app.user.roles|json_encode }}">
                             {% if is_granted('ROLE_ETUDIANT') %}
                                 {% if rendez_vous.statut is null %}
                                     <a href="{{ path('confirmation_rendez_vous', {id: rendez_vous.id}) }}" class="btn btn-success">Confirmer le rendez-vous</a>
@@ -98,6 +98,7 @@
     <!-- Initialisation de DataTables -->
     <script>
         $(document).ready(function() {
+            // Génération des boutons d'action
             var columns = [
                 { "data": "id" },
                 { "data": "date" },
@@ -111,20 +112,32 @@
                 {
                     "data": null,
                     "render": function (data, type, row) {
+                        var roles = $('#dataTable').find('td[data-roles]').data('roles');
                         var actions = "";
-                        if (row.statut === null && is_granted('ROLE_ETUDIANT')) {
-                            actions += '<a href="' + Routing.generate("confirmation_rendez_vous", {id: row.id}) + '" class="btn btn-success">Confirmer le rendez-vous</a>';
-                            actions += '<a href="' + Routing.generate("refus_rendez_vous", {id: row.id}) + '" class="btn btn-danger">Refuser le rendez-vous</a>';
-                        } else if (row.statut === true && is_granted('ROLE_ETUDIANT')) {
-                            actions += '<a href="' + Routing.generate("refus_rendez_vous", {id: row.id}) + '" class="btn btn-danger">Refuser le rendez-vous</a>';
-                        } else if (row.statut === false && is_granted('ROLE_ETUDIANT')) {
-                            actions += '<a href="' + Routing.generate("confirmation_rendez_vous", {id: row.id}) + '" class="btn btn-success">Confirmer le rendez-vous</a>';
+
+                        if (roles) {
+                            var isEtudiant = roles.indexOf('ROLE_ETUDIANT') !== -1;
+                            var isRepresentant = roles.indexOf('ROLE_REPRESENTANT') !== -1;
+
+                            if (isEtudiant) {
+                                if (row.statut === null) {
+                                    actions += '<a href="' + Routing.generate("confirmation_rendez_vous", {id: row.id}) + '" class="btn btn-success">Confirmer le rendez-vous</a>';
+                                    actions += '<a href="' + Routing.generate("refus_rendez_vous", {id: row.id}) + '" class="btn btn-danger">Refuser le rendez-vous</a>';
+                                } else if (row.statut === true) {
+                                    actions += '<a href="' + Routing.generate("refus_rendez_vous", {id: row.id}) + '" class="btn btn-danger">Refuser le rendez-vous</a>';
+                                } else if (row.statut === false) {
+                                    actions += '<a href="' + Routing.generate("confirmation_rendez_vous", {id: row.id}) + '" class="btn btn-success">Confirmer le rendez-vous</a>';
+                                }
+                            } else if (isRepresentant) {
+                                // Ajoutez ici les actions spécifiques aux représentants si nécessaire
+                            }
                         }
                         return actions;
                     }
                 }
             ];
 
+            // Création du DataTable après la génération des boutons
             var dataTable = $('#dataTable').DataTable({
                 "columns": columns,
                 "order": []  // Désactiver le tri par défaut

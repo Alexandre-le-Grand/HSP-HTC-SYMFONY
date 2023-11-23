@@ -97,6 +97,47 @@ class ConferenceController extends AbstractController
         ]);
     }
 
+    #[Route('/conference/modification/{id}', name: 'conference.modification', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function edtit(
+        Conference $conference,
+        Request $request,
+        EntityManagerInterface $manager): Response
+    {
+        if ($this->getUser() !== $conference->getRefUtilisateur()) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas les droits pour modifier cette conférence.');
+        }
+
+        $form = $this->createForm(ConferenceType::class, $conference);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->flush();
+
+            $this->addFlash('success', 'La conférence a été modifiée avec succès.');
+            return $this->redirectToRoute('conference.index');
+        }
+
+        return $this->render('pages/conference/edit.html.twig', [
+            'form' => $form->createView(),
+            'conference' => $conference,
+        ]);
+    }
+
+    #[Route('/conference/suppression/{id}', name: 'conference.suppression', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(
+        Conference $conference,
+        EntityManagerInterface $manager): Response
+    {
+        $manager->remove($conference);
+        $manager->flush();
+
+        $this->addFlash('success', 'La conférence a été supprimée avec succès.');
+
+        return $this->redirectToRoute('conference.index');
+    }
+
     #[Route("/conference/selection_amphi", name: "select_amphitheatre", methods: ['GET','POST'])]
     public function indexAmphitheatre(
         ConferenceRepository $repository,

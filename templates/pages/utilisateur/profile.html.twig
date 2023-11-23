@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil utilisateur{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 style="text-align: center">Profil personnel</h1>
+        <hr class="my-4">
+
+        <h3>Vos informations :</h3>
+        <br>
+        <ul>
+            <li>Nom  : {{ utilisateur.nom }}</li>
+            <li>Prénom : {{ utilisateur.prenom }}</li>
+            <li>Email : {{ utilisateur.email }}</li>
+            <li>Statut :
+                {% if utilisateur.domaineEtude is defined %}
+                    Étudiant
+                    <ul>
+                        <li>Domaine d'étude : {{ utilisateur.domaineEtude }}</li>
+                    </ul>
+                {% elseif utilisateur.nomHopital is defined %}
+                    Représentant
+                    <ul>
+                        <li>Nom de l'hôpital : {{ utilisateur.nomHopital }}</li>
+                        <li>Adresse de l'hôpital : {{ utilisateur.adresse }}</li>
+                        <li>Rôle dans l'hôpital : {{ utilisateur.role }}</li>
+                    </ul>
+                {% else %}
+                    {% if 'ROLE_ADMIN' in utilisateur.roles %}
+                        Administrateur
+                    {% endif %}
+                {% endif %}
+            </li>
+        </ul>
+        <br>
+        <a href="{{ path('utilisateur.edit_profile', {'id': userId}) }}" class="btn btn-info">Modifier mon profil</a>
+
+    </div>
+{% endblock %}
