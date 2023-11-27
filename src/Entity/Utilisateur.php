@@ -46,11 +46,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     #[Assert\NotBlank()]
-    private ?string $password = 'password';
+    private ?string $password;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $resetToken  = null;
-
+    private ?string $resetToken = null;
 
     #[ORM\Column(type: 'json')]
     #[Assert\NotNull]
@@ -272,6 +271,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeEtudiant(Etudiant $etudiant): static
     {
         if ($this->etudiants->removeElement($etudiant)) {
+            // set
             // set the owning side to null (unless already changed)
             if ($etudiant->getIdUtilisateur() === $this) {
                 $etudiant->setIdUtilisateur(null);

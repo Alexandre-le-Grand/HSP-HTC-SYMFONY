@@ -127,8 +127,9 @@ class SecurityController extends AbstractController
     ): Response
     {
         $form = $this->createForm(ResetPasswordFormType::class);
-
         $form->handleRequest($request);
+        //$test = $usersRepository->findOneByEmail("bertrand.hubert@delannoy.org");
+
 
         if($form->isSubmitted() && $form->isValid()){
             //On va chercher l'utilisateur par son email
@@ -159,15 +160,17 @@ class SecurityController extends AbstractController
                 );
 
                 $this->addFlash('success', 'Email envoyé avec succès');
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('security.login');
             }
             // $user est null
             $this->addFlash('danger', 'Un problème est survenu');
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('security.login');
         }
 
+        var_dump($form);
         return $this->render('pages/reset_password/reset_password_request.html.twig', [
-            'requestPassForm' => $form->createView()
+            'test' => $form->createView(),
+            //'test' => $test,
         ]);
     }
     #[Route('/oubli-pass/{token}', name:'reset_pass')]
@@ -205,17 +208,17 @@ class SecurityController extends AbstractController
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Mot de passe changé avec succès');
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('security.login');
             }
 
             return $this->render('reset_password/reset_password.html.twig', [
-                'passForm' => $form->createView()
+                'form' => $form->createView(),
             ]);
         }
 
         // Si le token est invalide on redirige vers le login
         $this->addFlash('danger', 'Jeton invalide');
-        return $this->redirectToRoute('app_login');
+        return $this->redirectToRoute('security.login');
     }
 
 }
