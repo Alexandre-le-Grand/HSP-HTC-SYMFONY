@@ -18,6 +18,8 @@ class ProfilType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $userRole = $options['user_role'];
+
         $builder
             ->add('nom', TextType::class, [
                 'attr' => [
@@ -55,7 +57,63 @@ class ProfilType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Email()
                 ]
-            ])
+            ]);
+
+        if ($userRole === 'ROLE_ETUDIANT') {
+            $builder
+                ->add('domaineEtude', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Domaine d\'étude :',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ],
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
+                ]);
+        } elseif ($userRole === 'ROLE_REPRESENTANT') {
+            $builder
+                ->add('nom_hopital', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Nom de l\'hôpital :',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ],
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
+                ])
+                ->add('adresse', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Adresse de l\'hôpital :',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ],
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
+                ])
+                ->add('role', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Vôtre rôle dans l\'hôpital :',
+                    'label_attr' => [
+                        'class' => 'form-label mt-4'
+                    ],
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ]
+                ]);
+        }
+
+        $builder
             ->add('plainPassword', RepeatedType:: class, [
                 'type' => PasswordType:: class,
                 'first_options' => [
@@ -87,13 +145,13 @@ class ProfilType extends AbstractType
                 ],
                 'label' => 'Modifier mon profil',
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
+            'user_role' => null,
         ]);
     }
 }

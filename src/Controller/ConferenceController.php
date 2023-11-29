@@ -99,7 +99,7 @@ class ConferenceController extends AbstractController
 
     #[Route('/conference/modification/{id}', name: 'conference.modification', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function edtit(
+    public function edit(
         Conference $conference,
         Request $request,
         EntityManagerInterface $manager): Response
@@ -108,7 +108,9 @@ class ConferenceController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'avez pas les droits pour modifier cette conférence.');
         }
 
-        $form = $this->createForm(ConferenceType::class, $conference);
+        $form = $this->createForm(ConferenceType::class, $conference, [
+            'is_edit' => true,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

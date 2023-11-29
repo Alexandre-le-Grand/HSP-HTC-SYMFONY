@@ -32,6 +32,13 @@
                 </h4>
             </div>
 
+            {% set canModifyConference = false %}
+            {% for conference in conferences %}
+                {% if is_granted('ROLE_USER') and conference.refUtilisateur == app.user %}
+                    {% set canModifyConference = true %}
+                {% endif %}
+            {% endfor %}
+
             <table class="table table-hover" id="dataTable">
                 <thead>
                 <tr>
@@ -42,7 +49,6 @@
                     <th scope="col">Heure</th>
                     <th scope="col">Durée</th>
                     <th scope="col">Amphithéâtre</th>
-                    <th scope="col">Modification</th>
                     {% if is_granted('ROLE_ETUDIANT') %}
                         <th scope="col">Inscription / Désinscription</th>
                     {% endif %}
@@ -50,6 +56,9 @@
                         <th scope="col">Statut</th>
                         <th scope="col">Actions</th>
                         <th>Suppression</th>
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') and canModifyConference %}
+                        <th scope="col">Modification</th>
                     {% endif %}
                 </tr>
                 </thead>
@@ -79,11 +88,6 @@
                                     Non attribué
                                 {% endif %}
                             </td>
-                            {% if is_granted('ROLE_USER') and conference.refUtilisateur == app.user %}
-                                <td>
-                                    <a href="{{ path('conference.modification', {'id': conference.id}) }}" class="btn btn-info">Modifier</a>
-                                </td>
-                            {% endif %}
                             {% if is_granted('ROLE_ADMIN') %}
                                 <td>
                                     {% if conference.statut == 0 %}
@@ -101,39 +105,43 @@
                                 <td>
                                     <a href="{{ path('conference.suppression', {'id': conference.id}) }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette conférence ?')">Supprimer</a>
                                 </td>
-                                </td>
                             {% endif %}
+                            {% if is_granted('ROLE_ETUDIANT') and conference.statut == 1 %}
                             <td>
-                                {% if is_granted('ROLE_ETUDIANT') and conference.statut == 1 %}
-                                    {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
-                                    {% set conferenceDate = conference.date|date('Y-m-d') %}
-                                    {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
+                                {% set currentDateWithoutTime = currentDate|date('Y-m-d') %}
+                                {% set conferenceDate = conference.date|date('Y-m-d') %}
+                                {% set inscriptionEndDate = conference.date|date_modify('+' ~ conference.duree|date('H') ~ ' hours ' ~ conference.duree|date('i') ~ ' minutes') %}
 
-                                    {% if currentDateWithoutTime < conferenceDate %}
-                                        {% set isUserRegistered = false %}
-                                        {% for inscription in conference.inscriptions %}
-                                            {% if inscription.getRefEtudiant == app.user %}
-                                                {% set isUserRegistered = true %}
-                                            {% endif %}
-                                        {% endfor %}
+                                {% if currentDateWithoutTime < conferenceDate %}
+                                    {% set isUserRegistered = false %}
+                                    {% for inscription in conference.inscriptions %}
+                                        {% if inscription.getRefEtudiant == app.user %}
+                                            {% set isUserRegistered = true %}
+                                        {% endif %}
+                                    {% endfor %}
 
-                                        {% if not isUserRegistered %}
-                                            {% if conference.inscriptions.count < conference.refAmphi.NbPlaces %}
-                                                <a href="{{ path('conference.inscription', {'id': conference.id}) }}" class="btn btn-success">S'inscrire</a>
-                                            {% else %}
-                                                Aucune place disponible
-                                            {% endif %}
+                                    {% if not isUserRegistered %}
+                                        {% if conference.inscriptions.count < conference.refAmphi.NbPlaces %}
+                                            <a href="{{ path('conference.inscription', {'id': conference.id}) }}" class="btn btn-success">S'inscrire</a>
                                         {% else %}
-                                            <a href="{{ path('conference.desinscription', {'id': conference.id}) }}" class="btn btn-danger">Se désinscrire</a>
+                                            Aucune place disponible
                                         {% endif %}
                                     {% else %}
-                                        Inscriptions clôturées
+                                        <a href="{{ path('conference.desinscription', {'id': conference.id}) }}" class="btn btn-danger">Se désinscrire</a>
                                     {% endif %}
+                                {% else %}
+                                    Inscriptions clôturées
+                                {% endif %}
                                 {% endif %}
                                 {% if is_granted('ROLE_ETUDIANT') and conference.statut == 0 %}
-                                    En attente de validation
-                                {% endif %}
+                                En attente de validation
                             </td>
+                            {% endif %}
+                            {% if is_granted('ROLE_USER') and conference.refUtilisateur == app.user %}
+                                <td>
+                                    <a href="{{ path('conference.modification', {'id': conference.id}) }}" class="btn btn-info">Modifier</a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -147,6 +155,7 @@
         {% endif %}
     </div>
 {% endblock %}
+
 {% block datatable_scripts %}
     {{ parent() }}
     <!-- Initialisation de DataTables -->

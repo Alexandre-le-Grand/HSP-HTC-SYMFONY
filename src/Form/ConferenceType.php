@@ -91,7 +91,7 @@ class ConferenceType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-primary mt-4'
                 ],
-                'label' => 'Créer la conférence'
+                'label'  => $options['is_edit'] ? 'Modifier la conférence' : 'Créer la conférence',
             ]);
     }
 
@@ -144,6 +144,7 @@ class ConferenceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Conference::class,
+            'is_edit' => false, // Ajoutez cette ligne pour définir la valeur par défaut de l'option is_edit
         ]);
     }
 }

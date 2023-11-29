@@ -54,9 +54,9 @@ class UtilisateurController extends AbstractController
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()){
             $utilisateur = $form->getData();
-
             $utilisateur->setStatut(1);
 
             $manager->persist($utilisateur);
@@ -135,7 +135,9 @@ class UtilisateurController extends AbstractController
         EntityManagerInterface $manager,
         UserPasswordHasherInterface $hasher): Response
     {
-        $form = $this->createForm(ProfilType::class, $user);
+        $userRole = $this->getUser()->getRoles()[0];
+
+        $form = $this->createForm(ProfilType::class, $user, ['user_role' => $userRole]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -153,8 +155,10 @@ class UtilisateurController extends AbstractController
             $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
             return $this->redirectToRoute('utilisateur.profile');
         }
+
         return $this->render('pages/utilisateur/edit.html.twig', [
             'form' => $form->createView(),
+            'user_role' => $userRole,
         ]);
     }
 

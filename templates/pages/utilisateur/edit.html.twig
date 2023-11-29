@@ -27,6 +27,32 @@
             {{ form_errors(form.email) }}
         </div>
 
+        {% if user_role == 'ROLE_ETUDIANT' %}
+            <div class="form-group">
+                {{ form_label(form.domaineEtude) }}
+                {{ form_widget(form.domaineEtude) }}
+                {{ form_errors(form.domaineEtude) }}
+            </div>
+        {% elseif user_role == 'ROLE_REPRESENTANT' %}
+            <div class="form-group">
+                {{ form_label(form.nom_hopital) }}
+                {{ form_widget(form.nom_hopital) }}
+                {{ form_errors(form.nom_hopital) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.adresse) }}
+                {{ form_widget(form.adresse) }}
+                {{ form_errors(form.adresse) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.role) }}
+                {{ form_widget(form.role) }}
+                {{ form_errors(form.role) }}
+            </div>
+        {% endif %}
+
         <div class="form-group">
             {{ form_widget(form.plainPassword) }}
             {{ form_errors(form.plainPassword) }}

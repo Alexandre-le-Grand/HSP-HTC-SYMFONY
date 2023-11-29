@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -172,7 +173,57 @@ class UtilisateurType extends AbstractType
                 ],
                 'label' => 'Créer un nouvel utilisateur',
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $this->addSpecificFields($form, $data->getRoles());
+        });
+
+            $builder->get('roles')->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+                $form = $event->getForm()->getParent();
+                $roles = $event->getData();
+
+                $this->addSpecificFields($form, $roles);
+            });
     }
+
+    private function addSpecificFields(FormInterface $form, array $roles): void
+    {
+        if (in_array('ROLE_ETUDIANT', $roles)) {
+            $form->add('domaineEtude', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Domaine d\'étude :',
+                'label_attr' => ['class' => 'form-label mt-4'],
+                'constraints' => [new Assert\NotBlank()],
+            ]);
+        }
+
+        if (in_array('ROLE_REPRESENTANT', $roles)) {
+            $form->add('nomHopital', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Nom de l\'hôpital :',
+                'label_attr' => ['class' => 'form-label mt-4'],
+                'constraints' => [new Assert\NotBlank()],
+            ]);
+
+            $form->add('adresseHopital', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Adresse de l\'hôpital :',
+                'label_attr' => ['class' => 'form-label mt-4'],
+                'constraints' => [new Assert\NotBlank()],
+            ]);
+
+            $form->add('roleRepresentant', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Rôle du représentant :',
+                'label_attr' => ['class' => 'form-label mt-4'],
+                'constraints' => [new Assert\NotBlank()],
+            ]);
+        }
+    }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {
