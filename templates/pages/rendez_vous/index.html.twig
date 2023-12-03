@@ -60,10 +60,8 @@
                             {% endif %}
                         {% endif %}
                         <td>
-                            {% if rendez_vous.statut is null %}
-                                Attente de confirmation
-                            {% elseif rendez_vous.statut == 0 %}
-                                Refusé
+                            {% if rendez_vous.statut == 0 %}
+                                En attente
                             {% elseif rendez_vous.statut == 1 %}
                                 Confirmé
                             {% endif %}

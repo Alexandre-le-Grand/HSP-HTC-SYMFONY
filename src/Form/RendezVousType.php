@@ -2,10 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\Etudiant;
 use App\Entity\RendezVous;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,11 +17,12 @@ class RendezVousType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('date', TextType::class, [
+            ->add('date', ChoiceType::class, [
+                'choices' => $this->generateDateChoices(),
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'YYYY-MM-DD',
-                    'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                    'class' => 'form-control select2',
+                    'placeholder' => 'DD-MM-YYYY',
+                    'pattern' => '[0-9]{2}-[0-9]{2}-[0-9]{4}',
                 ],
                 'label' => 'Date du rendez-vous :',
                 'label_attr' => [
@@ -50,7 +50,6 @@ class RendezVousType extends AbstractType
                 ],
                 'label' => 'Créer un rendez-vous',
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -59,4 +58,21 @@ class RendezVousType extends AbstractType
             'data_class' => RendezVous::class,
         ]);
     }
+
+    private function generateDateChoices(): array
+    {
+        $currentDate = new \DateTime();
+        $endDate = (clone $currentDate)->modify('+2 years');
+
+        $interval = new \DateInterval('P1D');
+        $dateRange = new \DatePeriod($currentDate, $interval, $endDate);
+
+        $choices = [];
+        foreach ($dateRange as $date) {
+            $choices[$date->format('d-m-Y')] = $date->format('d-m-Y');
+        }
+
+        return $choices;
+    }
+
 }

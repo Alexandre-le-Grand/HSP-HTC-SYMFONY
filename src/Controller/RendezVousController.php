@@ -92,7 +92,7 @@ class RendezVousController extends AbstractController
             $manager->persist($rendezVous);
             $manager->flush();
 
-            return $this->redirectToRoute('postulations.index', ['id' => $offreEmploi->getId()]);
+            return $this->redirectToRoute('rendez_vous.index', ['id' => $offreEmploi->getId()]);
         }
 
         return $this->render('pages/rendez_vous/new.html.twig', [
