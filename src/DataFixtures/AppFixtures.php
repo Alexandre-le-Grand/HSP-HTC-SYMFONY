@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Administrateur;
 use App\Entity\Amphitheatre;
 use App\Entity\Conference;
+use App\Entity\Contact;
 use App\Entity\Etudiant;
 use App\Entity\OffreEmploi;
 use App\Entity\Postulation;
@@ -149,6 +150,17 @@ class AppFixtures extends Fixture
                     $manager->persist($postulation);
                 }
             }
+        }
+
+        for ($i=0; $i < 5; $i++){
+            $contact = new Contact();
+            $contact->setNom($this->faker->lastName());
+            $contact->setPrenom($this->faker->firstname());
+            $contact->setEmail($this->faker->email());
+            $contact->setSubject('Demande n°' . ($i + 1));
+            $contact->setMessage($this->faker->text());
+
+            $manager->persist($contact);
         }
 
         $manager->flush();

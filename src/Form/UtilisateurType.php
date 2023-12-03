@@ -113,7 +113,7 @@ class UtilisateurType extends AbstractType
                     new Assert\NotBlank(),
                 ]
             ])
-            ->add('email', EmailType::class,[
+            ->add('email', EmailType::class, [
                 'attr' => [
                     'class' => 'form-control',
                 ],
