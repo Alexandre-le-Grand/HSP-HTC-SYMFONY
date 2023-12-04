@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Etudiant extends Utilisateur
 {
     #[ORM\Column(length: 127)]
+    #[Assert\NotBlank]
     private ?string $domaine_etude = null;
 
     #[ORM\OneToMany(mappedBy: 'ref_etudiant', targetEntity: RendezVous::class, orphanRemoval: true)]

@@ -31,7 +31,7 @@ class SecurityController extends AbstractController
     #[Route('/connexion', name: 'security.login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()){
+        if ($this->getUser()) {
             return $this->redirectToRoute('menu.index');
         }
 
@@ -53,14 +53,9 @@ class SecurityController extends AbstractController
     }
 
 
-    /**
-     * This controller allow us to register
-     * @param Request $request
-     * @param EntityManagerInterface $manager
-     * @return Response
-     */
+
     #[Route('/inscriptionEtudiant', 'security.inscriptionEtudiant', methods: ['GET', 'POST'])]
-    public function inscriptionEtudiant(Request $request, EntityManagerInterface $manager) : Response
+    public function inscriptionEtudiant(Request $request, EntityManagerInterface $manager): Response
     {
         $etudiant = new Etudiant();
         $etudiant->setRoles(['ROLE_ETUDIANT']);
@@ -89,7 +84,7 @@ class SecurityController extends AbstractController
 
 
     #[Route('/inscriptionRepresentant', 'security.inscriptionRepresentant', methods: ['GET', 'POST'])]
-    public function inscriptionRepresentant(Request $request, EntityManagerInterface $manager) : Response
+    public function inscriptionRepresentant(Request $request, EntityManagerInterface $manager): Response
     {
         $representant = new RepresentantH();
         $representant->setRoles(['ROLE_REPRESENTANT']);
@@ -117,13 +112,13 @@ class SecurityController extends AbstractController
     }
 
 
-    #[Route('/oubli-pass', name:'forgotten_password')]
+    #[Route('/oubli-pass', name: 'forgotten_password')]
     public function forgottenPassword(
-        Request $request,
-        UtilisateurRepository $usersRepository,
+        Request                 $request,
+        UtilisateurRepository   $usersRepository,
         TokenGeneratorInterface $tokenGenerator,
-        EntityManagerInterface $entityManager,
-        MailerInterface $mailer
+        EntityManagerInterface  $entityManager,
+        MailerInterface         $mailer
     ): Response
     {
         $form = $this->createForm(ResetPasswordFormType::class);
@@ -131,12 +126,12 @@ class SecurityController extends AbstractController
         //$test = $usersRepository->findOneByEmail("bertrand.hubert@delannoy.org");
 
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             //On va chercher l'utilisateur par son email
             $user = $usersRepository->findOneByEmail($form->get('email')->getData());
 
             // On vérifie si on a un utilisateur
-            if($user){
+            if ($user) {
                 // On génère un token de réinitialisation
                 $token = $tokenGenerator->generateToken();
                 $user->setResetToken($token);
@@ -167,18 +162,18 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('security.login');
         }
 
-        var_dump($form);
         return $this->render('pages/reset_password/reset_password_request.html.twig', [
-            'test' => $form->createView(),
-            //'test' => $test,
+            'form' => $form->createView(),
+
         ]);
     }
-    #[Route('/oubli-pass/{token}', name:'reset_pass')]
+
+    #[Route('/oubli-pass/{token}', name: 'reset_pass')]
     public function resetPass(
-        string $token,
-        Request $request,
-        UtilisateurRepository $usersRepository,
-        EntityManagerInterface $entityManager,
+        string                      $token,
+        Request                     $request,
+        UtilisateurRepository       $usersRepository,
+        EntityManagerInterface      $entityManager,
         UserPasswordHasherInterface $passwordHasher
     ): Response
     {
@@ -186,18 +181,16 @@ class SecurityController extends AbstractController
         $user = $usersRepository->findOneByResetToken($token);
 
         // On vérifie si l'utilisateur existe
-
-        if($user){
+        if ($user) {
             $form = $this->createForm(ResetPasswordFormType::class);
 
             $form->handleRequest($request);
 
-            if($form->isSubmitted() && $form->isValid()){
+            if ($form->isSubmitted() && $form->isValid()) {
                 // On efface le token
                 $user->setResetToken('');
 
-
-// On enregistre le nouveau mot de passe en le hashant
+                // On enregistre le nouveau mot de passe en le hashant
                 $user->setPassword(
                     $passwordHasher->hashPassword(
                         $user,
@@ -212,7 +205,7 @@ class SecurityController extends AbstractController
             }
 
             return $this->render('reset_password/reset_password.html.twig', [
-                'form' => $form->createView(),
+                'form' => $form->createView(), // Assurez-vous que 'form' est bien passé ici
             ]);
         }
 
@@ -220,5 +213,4 @@ class SecurityController extends AbstractController
         $this->addFlash('danger', 'Jeton invalide');
         return $this->redirectToRoute('security.login');
     }
-
 }
