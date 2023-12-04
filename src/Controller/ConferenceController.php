@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\Entity\Amphitheatre;
 use App\Entity\Conference;
 use App\Entity\Inscription;
+use App\Entity\Utilisateur;
 use App\Form\ConferenceType;
 use App\Repository\AmphitheatreRepository;
 use App\Repository\ConferenceRepository;
+use ContainerFObY3mK\getUtilisateurService;
+use ContainerFObY3mK\getUtilisateurTypeService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -183,41 +186,29 @@ class ConferenceController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
-        /*
-        $email = (new Email())
-            ->from('hsp.botadm@gmail.com') //email créer du bot projet (mdp :HSPpassword)
-            ->to('c.gravallon@lprs.fr')
-            ->subject('Votre conférence a été validée')
-            ->text('Votre conférence a été validée avec succès.');
+        $utilisateur= new Utilisateur();
+        if ($this->getUser()) {
+            $utilisateur->setEmail($this->getUser()->getEmail());
+        }
+       $receveur =$conference->getRefUtilisateur();
+
+            $email = (new Email())
+            ->from($utilisateur->getEmail())
+            ->to($receveur->getEmail())
+            ->subject('Validation de conférence')
+            ->text('Votre conférence '.$conference->getNom().' a été validée avec succès.');
 
         $mailer->send($email);
 
-*/
-
-        $destinataire = "SELECT utilisateur.email FROM utilisateur JOIN conference ON utilisateur.id=conference.ref_utilisateur_id ";
-        $sujet = "Confirmation de conference";
-        $message = "Votre conference est validé avec succès";
-
-// En-têtes additionnels
-        $headers = "De: bot@hsp.com";
-
-// Envoi de l'e-mail
-        $mailEnvoye = mail($destinataire, $sujet, $message, $headers);
-
-// Vérification si l'e-mail a été envoyé avec succès
-        if ($mailEnvoye) {
-            echo "L'e-mail a été envoyé avec succès.";
-        } else {
-            echo "Échec de l'envoi de l'e-mail. Veuillez vérifier la configuration de votre serveur.";
-        }
-
-
         return $this->redirectToRoute('conference.index');
     }
+    //}
 
     #[Route('/conference/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function invaliderConference(
+        MailerInterface $mailer,
+        Request $request,
         Conference $conference,
         EntityManagerInterface $manager) : Response
     {
@@ -236,6 +227,19 @@ class ConferenceController extends AbstractController
             'success',
             'La conférence a été invalidée avec succès !'
         );
+        $utilisateur= new Utilisateur();
+        if ($this->getUser()) {
+            $utilisateur->setEmail($this->getUser()->getEmail());
+        }
+
+        $receveur =$conference->getRefUtilisateur();
+        $email = (new Email())
+            ->from($utilisateur->getEmail())
+            ->to($receveur->getEmail())
+            ->subject('Conférence refusée')
+            ->text('Votre conférence '.$conference->getNom().' a été refusée.');
+
+        $mailer->send($email);
 
         return $this->redirectToRoute('conference.index');
     }

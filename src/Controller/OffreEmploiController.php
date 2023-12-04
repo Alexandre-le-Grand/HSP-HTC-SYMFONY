@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\OffreEmploi;
 use App\Entity\Postulation;
+use App\Entity\Utilisateur;
 use App\Form\OffreEmploiType;
 use App\Repository\OffreEmploiRepository;
 use App\Repository\PostulationRepository;

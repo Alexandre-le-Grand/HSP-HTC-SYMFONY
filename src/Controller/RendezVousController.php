@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\RendezVous;
+use App\Entity\Utilisateur;
 use App\Form\RendezVousType;
 use App\Repository\PostulationRepository;
 use App\Repository\RendezVousRepository;
@@ -24,6 +25,7 @@ class RendezVousController extends AbstractController
     public function index(
         RendezVousRepository $repository,
         PaginatorInterface $paginator,
+        MailerInterface $mailer,
         Request $request,
         Security $security
     ): Response {
@@ -44,7 +46,19 @@ class RendezVousController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+        $utilisateur= new Utilisateur();
+        if ($this->getUser()) {
+            $utilisateur->setEmail($this->getUser()->getEmail());
+        }
 
+        $receveur =$rendezvous->getRefEtudiant();
+        $email = (new Email())
+            ->from($utilisateur->getEmail())
+            ->to($receveur->getUtilisateurId()->getEmail())
+            ->subject('Proposition Rendez Vous')
+            ->text('Un nouveau rendez-vous vous a été proposé par '.$rendezvous->getRefRepresentantH());
+
+        $mailer->send($email);
         return  $this->render('pages/rendez_vous/index.html.twig', [
             'rendezvous' => $rendezvous
         ]);
