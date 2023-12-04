@@ -71,6 +71,7 @@ class EtudiantType extends AbstractType
             ])
             ->add('plainPassword', RepeatedType:: class, [
                 'type' => PasswordType:: class,
+                'mapped' => true,
                 'first_options' => [
                     'attr' => [
                         'class' => 'form-control'
