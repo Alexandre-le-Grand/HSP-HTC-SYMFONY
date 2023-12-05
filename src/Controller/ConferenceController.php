@@ -24,7 +24,6 @@ use Symfony\Component\Mime\Email;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-
 class ConferenceController extends AbstractController
 {
     /**
@@ -186,23 +185,22 @@ class ConferenceController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
-        $utilisateur= new Utilisateur();
-        if ($this->getUser()) {
-            $utilisateur->setEmail($this->getUser()->getEmail());
-        }
-       $receveur =$conference->getRefUtilisateur();
 
-            $email = (new Email())
+        // Envoi d'e-mail
+        $utilisateur = $this->getUser();
+        $receveur = $conference->getRefUtilisateur();
+
+        $email = (new Email())
             ->from($utilisateur->getEmail())
             ->to($receveur->getEmail())
-            ->subject('Validation de conférence')
-            ->text('Votre conférence '.$conference->getNom().' a été validée avec succès.');
+            ->subject('Conférence validée')
+            ->text('Votre conférence ' . $conference->getNom() . ' a été validée avec succès.');
 
         $mailer->send($email);
 
         return $this->redirectToRoute('conference.index');
     }
-    //}
+
 
     #[Route('/conference/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -227,17 +225,15 @@ class ConferenceController extends AbstractController
             'success',
             'La conférence a été invalidée avec succès !'
         );
-        $utilisateur= new Utilisateur();
-        if ($this->getUser()) {
-            $utilisateur->setEmail($this->getUser()->getEmail());
-        }
 
-        $receveur =$conference->getRefUtilisateur();
+        $utilisateur = $this->getUser();
+        $receveur = $conference->getRefUtilisateur();
+
         $email = (new Email())
             ->from($utilisateur->getEmail())
             ->to($receveur->getEmail())
-            ->subject('Conférence refusée')
-            ->text('Votre conférence '.$conference->getNom().' a été refusée.');
+            ->subject('Conférence invalidée')
+            ->text('Votre conférence ' . $conference->getNom() . ' a été invalidée.');
 
         $mailer->send($email);
 

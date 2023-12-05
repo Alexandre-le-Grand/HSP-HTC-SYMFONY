@@ -22,7 +22,7 @@
             <div class="count mt-4">
                 <h4 style="color: #1aa990">
                     Nombre total de rendez-vous :
-                    {{ rendezvous.getTotalItemCount }}
+                    {{ rendezvous|length }}
                 </h4>
             </div>
 
@@ -83,7 +83,7 @@
                 </tbody>
             </table>
             <div class="navigation d-flex justify-content-center mt-4">
-                {{ knp_pagination_render(rendezvous) }}
+               
             </div>
         {% else %}
             <h4>Il n'y a aucun rendez-vous prévu</h4>

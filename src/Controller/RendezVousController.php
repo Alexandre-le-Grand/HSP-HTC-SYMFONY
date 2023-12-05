@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\RendezVous;
-use App\Entity\Utilisateur;
 use App\Form\RendezVousType;
 use App\Repository\PostulationRepository;
 use App\Repository\RendezVousRepository;
@@ -25,7 +24,6 @@ class RendezVousController extends AbstractController
     public function index(
         RendezVousRepository $repository,
         PaginatorInterface $paginator,
-        MailerInterface $mailer,
         Request $request,
         Security $security
     ): Response {
@@ -46,19 +44,7 @@ class RendezVousController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-        $utilisateur= new Utilisateur();
-        if ($this->getUser()) {
-            $utilisateur->setEmail($this->getUser()->getEmail());
-        }
 
-        $receveur =$rendezvous->getRefEtudiant();
-        $email = (new Email())
-            ->from($utilisateur->getEmail())
-            ->to($receveur->getUtilisateurId()->getEmail())
-            ->subject('Proposition Rendez Vous')
-            ->text('Un nouveau rendez-vous vous a été proposé par '.$rendezvous->getRefRepresentantH());
-
-        $mailer->send($email);
         return  $this->render('pages/rendez_vous/index.html.twig', [
             'rendezvous' => $rendezvous
         ]);
@@ -71,6 +57,7 @@ class RendezVousController extends AbstractController
         Request $request,
         EntityManagerInterface $manager,
         PostulationRepository $postulationRepository,
+        MailerInterface $mailer,
         $postulationId) : Response
     {
         $postulation = $postulationRepository->find($postulationId);
@@ -105,6 +92,20 @@ class RendezVousController extends AbstractController
 
             $manager->persist($rendezVous);
             $manager->flush();
+
+            // Envoi d'e-mail
+            $utilisateur = $this->getUser();
+
+            $receveur = $rendezVous->getRefEtudiant();
+            $representant = $rendezVous->getRefRepresentantH();
+
+            $email = (new Email())
+                ->from($utilisateur->getEmail())
+                ->to($receveur->getEmail())
+                ->subject('Nouveau Rendez-vous')
+                ->text('Un nouveau rendez-vous vous a été proposé par ' . $representant->getNom() . ' ' . $representant->getPrenom());
+
+            $mailer->send($email);
 
             return $this->redirectToRoute('rendez_vous.index', ['id' => $offreEmploi->getId()]);
         }
@@ -146,6 +147,7 @@ class RendezVousController extends AbstractController
 
         return $this->redirectToRoute('rendez_vous.index');
     }
+
 
     #[Route('/rendez_vous/refus/{id}', name: 'refus_rendez_vous', methods: ['GET'])]
     #[IsGranted('ROLE_ETUDIANT')]
