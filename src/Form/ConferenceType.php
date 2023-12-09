@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ConferenceType extends AbstractType
@@ -46,45 +47,36 @@ class ConferenceType extends AbstractType
                     'class' => 'form-label mt-4',
                 ],
             ])
-            ->add('heure', TextType::class, [
+            ->add('heure', ChoiceType::class, [
+                'choices' => $this->generateHeureChoices(),
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'HH:mm',
                 ],
                 'label' => 'Heure de la conférence :',
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ],
                 'constraints' => [
-                    new Assert\Regex([
-                        'pattern' => '/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/',
-                        'message' => 'L\'heure de la conférence doit être au format HH:mm (par exemple, 08:00).',
+                    new Assert\NotBlank([
+                        'message' => 'Veuillez sélectionner l\'heure de la conférence.',
                     ]),
-                    new Assert\GreaterThanOrEqual([
-                        'value' => '08:00',
-                        'message' => 'L\'heure de la conférence doit être au moins 08:00.',
-                    ]),
-                    new Assert\LessThanOrEqual([
-                        'value' => '11:30',
-                        'message' => 'L\'heure de la conférence ne peut pas être après 11:30.',
-                    ]),
+                    new Callback([$this, 'validateHeure']),
                 ],
             ])
-            ->add('duree', TextType::class, [
+            ->add('duree', ChoiceType::class, [
+                'choices' => $this->generateDureeChoices(),
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'HH:mm',
                 ],
                 'label' => 'Durée de la conférence :',
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ],
                 'constraints' => [
-                    new Assert\Regex([
-                        'pattern' => '/^\d{2}:\d{2}$/',
-                        'message' => 'Le format de la durée doit être hh:mm (par exemple, 02:30 pour 2 heures et 30 minutes).',
+                    new Assert\NotBlank([
+                        'message' => 'Veuillez sélectionner la durée de la conférence.',
                     ]),
-                    new Assert\Callback([$this, 'validateDuree']),
+                    new Callback([$this, 'validateDuree']),
                 ],
             ])
             ->add('submit', SubmitType::class, [
@@ -115,6 +107,53 @@ class ConferenceType extends AbstractType
         return $dates;
     }
 
+    private function generateHeureChoices()
+    {
+        $choices = [];
+        $heureDebut = 8;
+        $heureFin = 11;
+
+        for ($heure = $heureDebut; $heure <= $heureFin; $heure++) {
+            for ($minute = 0; $minute < 60; $minute += 30) {
+                $formattedTime = sprintf('%02d:%02d', $heure, $minute);
+                $choices[$formattedTime] = $formattedTime;
+            }
+        }
+
+        return $choices;
+    }
+
+    public function validateHeure($heure, ExecutionContextInterface $context)
+    {
+        if (strtotime($heure) < strtotime('08:00')) {
+            $context
+                ->buildViolation('L\'heure de la conférence doit être au moins 08:00.')
+                ->atPath('heure')
+                ->addViolation();
+        }
+    }
+
+
+    private function generateDureeChoices()
+    {
+        $choices = [];
+        $heureMax = 4;
+
+        for ($heure = 0; $heure <= $heureMax; $heure++) {
+            for ($minute = ($heure === 0 ? 30 : 0); $minute < 60; $minute += 30) {
+                if ($heure === $heureMax && $minute === 30) {
+                    break;
+                }
+
+                $formattedDuree = sprintf('%02d:%02d', $heure, $minute);
+                $choices[$formattedDuree] = $formattedDuree;
+            }
+        }
+
+        return $choices;
+    }
+
+
     public function validateDuree($duree, ExecutionContextInterface $context)
     {
         // Vous pouvez récupérer l'heure de début ici
@@ -144,7 +183,7 @@ class ConferenceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Conference::class,
-            'is_edit' => false, // Ajoutez cette ligne pour définir la valeur par défaut de l'option is_edit
+            'is_edit' => false, // valeur par défaut de l'option is_edit
         ]);
     }
 }

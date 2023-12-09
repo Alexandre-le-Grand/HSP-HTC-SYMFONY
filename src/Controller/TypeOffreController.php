@@ -75,7 +75,9 @@ class TypeOffreController extends AbstractController
         Request $request,
         EntityManagerInterface $manager) : Response
     {
-        $form = $this->createForm(TypeOffreType::class, $type_offre);
+        $form = $this->createForm(TypeOffreType::class, $type_offre, [
+            'is_edit' => true,
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
             $type_offre = $form->getData();

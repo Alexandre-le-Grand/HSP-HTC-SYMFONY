@@ -50,7 +50,7 @@
                             <a href="{{ path('amphitheatre.edit', { id: amphitheatre.id }) }}" class="btn btn-info">Modifier</a>
                         </td>
                         <td>
-                            <a href="{{ path('amphitheatre.delete', { id: amphitheatre.id }) }}" class="btn btn-danger">Supprimer</a>
+                            <a href="{{ path('amphitheatre.delete', { id: amphitheatre.id }) }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet amphithéâtre ?')">Supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}

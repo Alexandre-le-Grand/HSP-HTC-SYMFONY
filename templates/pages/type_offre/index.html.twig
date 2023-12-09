@@ -48,7 +48,7 @@
                             <a href="{{ path('type_offre.edit', { id: type_offre.id }) }}" class="btn btn-info">Modifier</a>
                         </td>
                         <td>
-                            <a href="{{ path('type_offre.delete', { id: type_offre.id }) }}" class="btn btn-danger">Supprimer</a>
+                            <a href="{{ path('type_offre.delete', { id: type_offre.id }) }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce type d\'offre ?')">Supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}

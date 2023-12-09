@@ -133,6 +133,8 @@ class RendezVousController extends AbstractController
         $manager->persist($rendezVous);
         $manager->flush();
 
+        //Email
+        /*
         $etudiant = $rendezVous->getRefEtudiant();
         $representant = $rendezVous->getRefRepresentantH();
         $email = (new Email())
@@ -142,6 +144,7 @@ class RendezVousController extends AbstractController
             ->text('Le rendez-vous a été confirmé par l\'étudiant.');
 
         $mailer->send($email);
+        */
 
         $this->addFlash('success', 'Rendez-vous confirmé avec succès, un e-mail a été envoyé au représentant.');
 
@@ -165,6 +168,8 @@ class RendezVousController extends AbstractController
         $manager->persist($rendezVous);
         $manager->flush();
 
+        //Email
+        /*
         $etudiant = $rendezVous->getRefEtudiant();
         $representant = $rendezVous->getRefRepresentantH();
         $email = (new Email())
@@ -174,6 +179,7 @@ class RendezVousController extends AbstractController
             ->text('Le rendez-vous a été refusé par l\'étudiant.');
 
         $mailer->send($email);
+        */
 
         $this->addFlash('success', 'Rendez-vous refusé avec succès, un e-mail a été envoyé au représentant.');
 

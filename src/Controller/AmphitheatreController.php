@@ -89,7 +89,9 @@ class AmphitheatreController extends AbstractController
         Request $request,
         EntityManagerInterface $manager) : Response
     {
-        $form = $this->createForm(AmphitheatreType::class, $amphitheatre);
+        $form = $this->createForm(AmphitheatreType::class, $amphitheatre, [
+            'is_edit' => true,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){

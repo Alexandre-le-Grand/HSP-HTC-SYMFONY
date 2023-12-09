@@ -31,18 +31,18 @@ class RendezVousType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('heure', TextType::class, [
+            ->add('heure', ChoiceType::class, [
+                'choices' => $this->generateHourChoices(),
                 'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'HH:mm',
-                    'pattern' => '[0-9]{2}:[0-9]{2}',
+                    'class' => 'form-control select2',
                 ],
                 'label' => 'Heure du rendez-vous :',
                 'label_attr' => [
                     'class' => 'form-label mt-4'
-                ],'constraints' => [
-                    new Assert\NotBlank()
-                ]
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
@@ -70,6 +70,21 @@ class RendezVousType extends AbstractType
         $choices = [];
         foreach ($dateRange as $date) {
             $choices[$date->format('d-m-Y')] = $date->format('d-m-Y');
+        }
+
+        return $choices;
+    }
+
+    private function generateHourChoices(): array
+    {
+        $choices = [];
+
+        for ($hour = 0; $hour < 24; $hour++) {
+            $formattedHour = sprintf('%02d:00', $hour);
+            $choices[$formattedHour] = $formattedHour;
+
+            $formattedHalfHour = sprintf('%02d:30', $hour);
+            $choices[$formattedHalfHour] = $formattedHalfHour;
         }
 
         return $choices;

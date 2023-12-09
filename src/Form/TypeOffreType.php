@@ -32,7 +32,7 @@ class TypeOffreType extends AbstractType
                 'attr' => [
                     'class' =>'btn btn-primary mt-4'
                 ],
-                'label' => 'Créer le type d\'offre',
+                'label'  => $options['is_edit'] ? 'Modifier le type d\'offre' : 'Créer le type d\'offre',
             ]);
     }
 
@@ -40,6 +40,7 @@ class TypeOffreType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => TypeOffre::class,
+            'is_edit' => false,
         ]);
     }
 }

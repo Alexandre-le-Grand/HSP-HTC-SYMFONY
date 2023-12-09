@@ -5,12 +5,9 @@ namespace App\Controller;
 use App\Entity\Amphitheatre;
 use App\Entity\Conference;
 use App\Entity\Inscription;
-use App\Entity\Utilisateur;
 use App\Form\ConferenceType;
 use App\Repository\AmphitheatreRepository;
 use App\Repository\ConferenceRepository;
-use ContainerFObY3mK\getUtilisateurService;
-use ContainerFObY3mK\getUtilisateurTypeService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -20,15 +17,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 class ConferenceController extends AbstractController
 {
     /**
      * This function display all conferences
      * @param ConferenceRepository $repository
+     * @param AmphitheatreRepository $amphitheatreRepository
      * @param PaginatorInterface $paginator
      * @param Request $request
      * @return Response
@@ -52,7 +47,7 @@ class ConferenceController extends AbstractController
 
         $currentDate = new DateTime();
         $amphitheatres = $amphitheatreRepository->findAll();
-        $conferences = $repository->findAll();
+        $repository->findAll();
 
         $conferences = $paginator->paginate(
             $repository->findAll(), /* query NOT result */
@@ -60,11 +55,14 @@ class ConferenceController extends AbstractController
             10 /*limit per page*/
         );
 
+        $totalValidConferences = $repository->countValidConferences();
+
         return $this->render('pages/conference/index.html.twig', [
             'conferences' => $conferences,
             'currentDate' => $currentDate,
             'amphitheatreRepository' => $amphitheatreRepository,
             'amphitheatres' => $amphitheatres,
+            'totalValidConferences' => $totalValidConferences,
         ]);
     }
 
@@ -166,8 +164,9 @@ class ConferenceController extends AbstractController
     public function lierAmphitheatre(
         MailerInterface $mailer,
         Request $request,
-        EntityManagerInterface $entityManager)
-    {
+        EntityManagerInterface $entityManager,
+        ConferenceRepository $conferenceRepository
+    ) {
         $amphitheatreId = $request->get('amphitheatreId');
         $conferenceId = $request->get('conferenceId');
 
@@ -178,6 +177,29 @@ class ConferenceController extends AbstractController
             throw $this->createNotFoundException('La conférence ou l\'amphithéâtre n\'existe pas.');
         }
 
+        $conferenceStartDate = new \DateTime($conference->getDate());
+        $conferenceDuration = $conference->getDuree();
+        $conferenceEndDate = clone $conferenceStartDate;
+        $conferenceEndDate->add(new \DateInterval('PT' . (int) $conferenceDuration . 'M'));
+
+        // Vérifie si l'amphithéâtre est disponible
+        if (!$amphitheatre->isDisponible()) {
+            $this->addFlash('danger', 'L\'amphithéâtre n\'est pas disponible.');
+            return $this->redirectToRoute('conference.index');
+        }
+
+        // Vérifie si l'amphithéâtre est disponible pour la plage horaire de la conférence
+        if (!$conferenceRepository->isAmphitheatreAvailableForTimeRange($amphitheatre, $conferenceStartDate, $conferenceEndDate, $conferenceId)) {
+            $this->addFlash('danger', 'L\'amphithéâtre n\'est pas disponible pour cette plage horaire.');
+            return $this->redirectToRoute('conference.index');
+        }
+
+        // Ajoute la conférence à l'amphithéâtre
+        $amphitheatre->setDisponible(false);
+
+        $heureFinString = $conferenceEndDate->format('d-m-Y H:i:s');
+        $amphitheatre->setHeureFin($heureFinString);
+
         $conference->setRefAmphi($amphitheatre);
         $conference->setStatut(true);
 
@@ -186,20 +208,9 @@ class ConferenceController extends AbstractController
 
         $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
 
-        // Envoi d'e-mail
-        $utilisateur = $this->getUser();
-        $receveur = $conference->getRefUtilisateur();
-
-        $email = (new Email())
-            ->from($utilisateur->getEmail())
-            ->to($receveur->getEmail())
-            ->subject('Conférence validée')
-            ->text('Votre conférence ' . $conference->getNom() . ' a été validée avec succès.');
-
-        $mailer->send($email);
-
         return $this->redirectToRoute('conference.index');
     }
+
 
 
     #[Route('/conference/invalidation/{id}', 'conference.invalidation', methods: ['GET', 'POST'])]
@@ -226,6 +237,8 @@ class ConferenceController extends AbstractController
             'La conférence a été invalidée avec succès !'
         );
 
+        // Envoi d'e-mail
+        /*
         $utilisateur = $this->getUser();
         $receveur = $conference->getRefUtilisateur();
 
@@ -236,6 +249,7 @@ class ConferenceController extends AbstractController
             ->text('Votre conférence ' . $conference->getNom() . ' a été invalidée.');
 
         $mailer->send($email);
+        */
 
         return $this->redirectToRoute('conference.index');
     }

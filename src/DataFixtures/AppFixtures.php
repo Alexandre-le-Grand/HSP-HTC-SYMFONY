@@ -84,6 +84,7 @@ class AppFixtures extends Fixture
             $amphitheatre = new Amphitheatre();
             $amphitheatre->setNom($this->faker->lastName);
             $amphitheatre->setNbPlaces($this->faker->randomNumber(3));
+            $amphitheatre->setDisponible(true);
 
             $manager->persist($amphitheatre);
             $this->addReference('amphitheatre_id' . $i, $amphitheatre);

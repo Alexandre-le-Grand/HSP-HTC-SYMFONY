@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AmphitheatreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -25,6 +26,12 @@ class Amphitheatre
 
     #[ORM\OneToMany(mappedBy: 'ref_amphi', targetEntity: Conference::class)]
     private Collection $conferences;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $disponible = null;
+
+    #[ORM\Column(nullable: true, type: 'string')]
+    private ?string $heureFin = null;
 
     public function __construct()
     {
@@ -89,4 +96,28 @@ class Amphitheatre
 
         return $this;
     }
+
+    public function isDisponible(): ?bool
+    {
+        return $this->disponible;
+    }
+
+    public function setDisponible(bool $disponible): static
+    {
+        $this->disponible = $disponible;
+
+        return $this;
+    }
+
+    public function getHeureFin(): ?string
+    {
+        return $this->heureFin;
+    }
+
+    public function setHeureFin(?string $heureFin): void
+    {
+        $this->heureFin = $heureFin;
+    }
+
+
 }

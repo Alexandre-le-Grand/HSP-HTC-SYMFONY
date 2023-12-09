@@ -42,7 +42,7 @@ class AmphitheatreType extends AbstractType
             'attr' => [
                 'class' => 'btn btn-primary mt-4'
                 ],
-                'label' => 'Créer l\'amphithéâtre'
+                'label'  => $options['is_edit'] ? 'Modifier l\'amphithéâtre' : 'Créer l\'amphithéâtre'
         ]);
     }
 
@@ -50,6 +50,7 @@ class AmphitheatreType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Amphitheatre::class,
+            'is_edit' => false,
         ]);
     }
 }

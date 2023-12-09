@@ -83,7 +83,7 @@
                 </tbody>
             </table>
             <div class="navigation d-flex justify-content-center mt-4">
-               
+
             </div>
         {% else %}
             <h4>Il n'y a aucun rendez-vous prévu</h4>
@@ -92,56 +92,7 @@
 {% endblock %}
 
 {% block datatable_scripts %}
-    {{ parent() }}
-    <!-- Initialisation de DataTables -->
-    <script>
-        $(document).ready(function() {
-            // Génération des boutons d'action
-            var columns = [
-                { "data": "id" },
-                { "data": "date" },
-                { "data": "heure" },
-                { "data": "refOffre.titre" },
-                {% if is_granted('ROLE_REPRESENTANT') %}
-                { "data": "refEtudiant.nom" },
-                { "data": "refEtudiant.domaineetude" },
-                {% endif %}
-                { "data": "statut" },
-                {
-                    "data": null,
-                    "render": function (data, type, row) {
-                        var roles = $('#dataTable').find('td[data-roles]').data('roles');
-                        var actions = "";
 
-                        if (roles) {
-                            var isEtudiant = roles.indexOf('ROLE_ETUDIANT') !== -1;
-                            var isRepresentant = roles.indexOf('ROLE_REPRESENTANT') !== -1;
-
-                            if (isEtudiant) {
-                                if (row.statut === null) {
-                                    actions += '<a href="' + Routing.generate("confirmation_rendez_vous", {id: row.id}) + '" class="btn btn-success">Confirmer le rendez-vous</a>';
-                                    actions += '<a href="' + Routing.generate("refus_rendez_vous", {id: row.id}) + '" class="btn btn-danger">Refuser le rendez-vous</a>';
-                                } else if (row.statut === true) {
-                                    actions += '<a href="' + Routing.generate("refus_rendez_vous", {id: row.id}) + '" class="btn btn-danger">Refuser le rendez-vous</a>';
-                                } else if (row.statut === false) {
-                                    actions += '<a href="' + Routing.generate("confirmation_rendez_vous", {id: row.id}) + '" class="btn btn-success">Confirmer le rendez-vous</a>';
-                                }
-                            } else if (isRepresentant) {
-                                // Ajoutez ici les actions spécifiques aux représentants si nécessaire
-                            }
-                        }
-                        return actions;
-                    }
-                }
-            ];
-
-            // Création du DataTable après la génération des boutons
-            var dataTable = $('#dataTable').DataTable({
-                "columns": columns,
-                "order": []  // Désactiver le tri par défaut
-            });
-        });
-    </script>
 {% endblock %}
 
 

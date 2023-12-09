@@ -27,14 +27,13 @@
 
             <div class="count mt-4">
                 <h4 style="color: #1aa990">
-                    Nombre total de conférences :
-                    {{ conferences.getTotalItemCount }}
+                    Nombre total de conférences validées: {{ totalValidConferences }}
                 </h4>
             </div>
 
             {% set canModifyConference = false %}
             {% for conference in conferences %}
-                {% if is_granted('ROLE_USER') and conference.refUtilisateur == app.user %}
+                {% if is_granted('ROLE_USER') and conference.refUtilisateur == app.user  and conference.statut == 0 %}
                     {% set canModifyConference = true %}
                 {% endif %}
             {% endfor %}
@@ -58,7 +57,7 @@
                         <th>Suppression</th>
                     {% endif %}
                     {% if is_granted('ROLE_USER') and canModifyConference %}
-                        <th scope="col">Modification</th>
+                        <th scope="col">Modification <br> (jusqu'à la validation)</th>
                     {% endif %}
                 </tr>
                 </thead>
@@ -78,7 +77,7 @@
                             <th scope="row">{{ conference.id }}</th>
                             <td>{{ conference.nom }}</td>
                             <td>{{ conference.description }}</td>
-                            <td>{{ conference.date|date('Y-m-d') }}</td>
+                            <td>{{ conference.date|date('d-m-Y') }}</td>
                             <td>{{ conference.heure|date('H:i') }}</td>
                             <td>{{ conference.duree }}</td>
                             <td>
@@ -134,10 +133,11 @@
                                 {% endif %}
                                 {% endif %}
                                 {% if is_granted('ROLE_ETUDIANT') and conference.statut == 0 %}
+                            <td>
                                 En attente de validation
                             </td>
                             {% endif %}
-                            {% if is_granted('ROLE_USER') and conference.refUtilisateur == app.user %}
+                            {% if is_granted('ROLE_USER') and canModifyConference and conference.statut != 1 %}
                                 <td>
                                     <a href="{{ path('conference.modification', {'id': conference.id}) }}" class="btn btn-info">Modifier</a>
                                 </td>
