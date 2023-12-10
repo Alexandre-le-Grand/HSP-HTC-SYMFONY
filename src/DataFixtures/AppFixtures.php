@@ -104,10 +104,15 @@ class AppFixtures extends Fixture
             $heureStr = $heure->format('H:i');
             $conference->setHeure($heureStr);
 
-            $dureeHours = $this->faker->numberBetween(1, 5); // Par exemple, de 1 à 5 heures
+            $dureeHours = $this->faker->numberBetween(1, 4); // Par exemple, de 1 à 4 heures
             $dureeMinutes = $this->faker->numberBetween(0, 59); // De 0 à 59 minutes
             $duree = sprintf('%02d:%02d', $dureeHours, $dureeMinutes);
+
             $conference->setDuree($duree);
+
+            $endDate = clone $date;
+            $endDate->add(new \DateInterval('PT' . $dureeHours . 'H' . $dureeMinutes . 'M'));
+            $conference->setEndDate($endDate);
 
             $conference->setStatut(false);
 

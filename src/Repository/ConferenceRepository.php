@@ -32,25 +32,21 @@ class ConferenceRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function isAmphitheatreAvailableForTimeRange(Amphitheatre $amphitheatre, \DateTime $start, \DateTime $end, int $conferenceId = null)
+    public function isAmphitheatreAvailableForTimeRange(Amphitheatre $amphitheatre, \DateTime $start, \DateTime $end)
     {
-        $qb = $this->createQueryBuilder('c')
+        $existingConference = $this->createQueryBuilder('c')
             ->andWhere('c.ref_amphi = :amphitheatre')
-            ->andWhere(':end > c.date') // Vérifier si la date de début est avant la date de fin de la conférence
-            ->andWhere(':start < DATE_ADD(c.date, c.duree, \'MINUTE\')') // Vérifier si la date de fin est après la date de début de la conférence
+            ->andWhere('(c.date >= :start AND c.date < :end) OR (c.date < :start AND c.endDate > :start)')
             ->setParameter('amphitheatre', $amphitheatre)
             ->setParameter('start', $start)
-            ->setParameter('end', $end);
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getOneOrNullResult();
 
-        if ($conferenceId) {
-            $qb->andWhere('c.id != :conferenceId')
-                ->setParameter('conferenceId', $conferenceId);
-        }
-
-        $result = $qb->getQuery()->getResult();
-
-        return empty($result);
+        return $existingConference === null;
     }
+
+
 
 
 //    /**

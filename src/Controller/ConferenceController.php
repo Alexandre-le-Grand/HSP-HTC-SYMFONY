@@ -166,12 +166,16 @@ class ConferenceController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ConferenceRepository $conferenceRepository
-    ) {
+    ): Response {
         $amphitheatreId = $request->get('amphitheatreId');
         $conferenceId = $request->get('conferenceId');
 
         $conference = $entityManager->getRepository(Conference::class)->find($conferenceId);
         $amphitheatre = $entityManager->getRepository(Amphitheatre::class)->find($amphitheatreId);
+
+        if ($amphitheatre instanceof \Doctrine\ORM\Proxy\Proxy && !$amphitheatre->__isInitialized()) {
+            $amphitheatre->__load();
+        }
 
         if (!$conference || !$amphitheatre) {
             throw $this->createNotFoundException('La conférence ou l\'amphithéâtre n\'existe pas.');
@@ -182,34 +186,32 @@ class ConferenceController extends AbstractController
         $conferenceEndDate = clone $conferenceStartDate;
         $conferenceEndDate->add(new \DateInterval('PT' . (int) $conferenceDuration . 'M'));
 
-        // Vérifie si l'amphithéâtre est disponible
-        if (!$amphitheatre->isDisponible()) {
-            $this->addFlash('danger', 'L\'amphithéâtre n\'est pas disponible.');
-            return $this->redirectToRoute('conference.index');
-        }
-
         // Vérifie si l'amphithéâtre est disponible pour la plage horaire de la conférence
-        if (!$conferenceRepository->isAmphitheatreAvailableForTimeRange($amphitheatre, $conferenceStartDate, $conferenceEndDate, $conferenceId)) {
+        $isAvailable = $conferenceRepository->isAmphitheatreAvailableForTimeRange($amphitheatre, $conferenceStartDate, $conferenceEndDate);
+
+        if ($isAvailable) {
+            // Ajoute la conférence à l'amphithéâtre
+            $amphitheatre->setDisponible(false);
+            $heureFinString = $conferenceEndDate->format('d-m-Y H:i:s');
+            $amphitheatre->setHeureFin($heureFinString);
+
+            $conference->setRefAmphi($amphitheatre);
+            $conference->setStatut(true);
+
+            $entityManager->persist($conference);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
+
+            return $this->redirectToRoute('conference.index');
+        } else {
+            // L'amphithéâtre n'est pas disponible pour la plage horaire de la conférence
             $this->addFlash('danger', 'L\'amphithéâtre n\'est pas disponible pour cette plage horaire.');
             return $this->redirectToRoute('conference.index');
         }
-
-        // Ajoute la conférence à l'amphithéâtre
-        $amphitheatre->setDisponible(false);
-
-        $heureFinString = $conferenceEndDate->format('d-m-Y H:i:s');
-        $amphitheatre->setHeureFin($heureFinString);
-
-        $conference->setRefAmphi($amphitheatre);
-        $conference->setStatut(true);
-
-        $entityManager->persist($conference);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'L\'amphithéâtre a été lié à la conférence validée avec succès.');
-
-        return $this->redirectToRoute('conference.index');
     }
+
+
 
 
 

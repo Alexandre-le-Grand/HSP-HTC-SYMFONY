@@ -47,6 +47,9 @@ class Conference
     #[ORM\OneToMany(mappedBy: 'ref_conference', targetEntity: Inscription::class, orphanRemoval: true)]
     private Collection $inscriptions;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $endDate = null;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -195,5 +198,17 @@ class Conference
                 ->atPath('heure')
                 ->addViolation();
         }
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(\DateTimeInterface $endDate): static
+    {
+        $this->endDate = $endDate;
+
+        return $this;
     }
 }
