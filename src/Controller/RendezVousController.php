@@ -19,7 +19,6 @@ use Symfony\Component\Mime\Email;
 
 class RendezVousController extends AbstractController
 {
-
     #[Route('/rendez_vous', name: 'rendez_vous.index')]
     public function index(
         RendezVousRepository $repository,
@@ -58,14 +57,14 @@ class RendezVousController extends AbstractController
         EntityManagerInterface $manager,
         PostulationRepository $postulationRepository,
         MailerInterface $mailer,
-        $postulationId) : Response
-    {
+        $postulationId
+    ): Response {
         $postulation = $postulationRepository->find($postulationId);
 
         if (!$postulation) {
             $this->addFlash(
                 'warning',
-                'Il n\'y à pas de postulation à cette offre'
+                'Il n\'y a pas de postulation à cette offre'
             );
 
             return $this->redirectToRoute('postulations.index');
@@ -87,13 +86,16 @@ class RendezVousController extends AbstractController
         $form = $this->createForm(RendezVousType::class, $rendezVous);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){
-            $rendezVous = $form->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Placer la création de la variable $refRepresentantH ici
+            $refRepresentantH = $this->getUser();
+            $rendezVous->setRefRepresentantH($refRepresentantH);
 
             $manager->persist($rendezVous);
             $manager->flush();
 
             // Envoi d'e-mail
+            /*
             $utilisateur = $this->getUser();
 
             $receveur = $rendezVous->getRefEtudiant();
@@ -106,6 +108,7 @@ class RendezVousController extends AbstractController
                 ->text('Un nouveau rendez-vous vous a été proposé par ' . $representant->getNom() . ' ' . $representant->getPrenom());
 
             $mailer->send($email);
+            */
 
             return $this->redirectToRoute('rendez_vous.index', ['id' => $offreEmploi->getId()]);
         }
@@ -115,6 +118,7 @@ class RendezVousController extends AbstractController
             'postulation' => $postulation,
         ]);
     }
+
 
 
     #[Route('/rendez_vous/confirmation/{id}', name: 'confirmation_rendez_vous', methods: ['GET'])]

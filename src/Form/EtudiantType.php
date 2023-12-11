@@ -69,9 +69,8 @@ class EtudiantType extends AbstractType
                     new Assert\NotBlank(),
                 ]
             ])
-            ->add('plainPassword', RepeatedType:: class, [
+            ->add('password', RepeatedType:: class, [
                 'type' => PasswordType:: class,
-                'mapped' => true,
                 'first_options' => [
                     'attr' => [
                         'class' => 'form-control'

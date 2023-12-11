@@ -42,8 +42,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $statut = false;
 
-    private ?string $plainpassword = null;
-
     /**
      * @var string The hashed password
      */
@@ -141,15 +139,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -191,15 +180,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->statut === true;
     }
 
-    public function getPlainpassword(): ?string
-    {
-        return $this->plainpassword;
-    }
-
-    public function setPlainpassword(?string $plainpassword): void
-    {
-        $this->plainpassword = $plainpassword;
-    }
 
     public function getResetToken(): ?string
     {
