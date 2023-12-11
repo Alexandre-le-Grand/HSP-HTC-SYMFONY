@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 
 class ConferenceController extends AbstractController
 {
@@ -238,20 +241,31 @@ class ConferenceController extends AbstractController
             'success',
             'La conférence a été invalidée avec succès !'
         );
+        //require'/vendor/autoload.php';
+        $mail = new PHPMailer(true);
 
-        // Envoi d'e-mail
-        /*
-        $utilisateur = $this->getUser();
-        $receveur = $conference->getRefUtilisateur();
+        try {
+            // Paramètres du serveur SMTP2GO
+            $mail->isSMTP();
+            $mail->Host       = 'mail.smtp2go.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'c.gravallon@lprs.fr';
+            $mail->Password   = 'HSPpasswordPHP';
+            $mail->SMTPSecure = 'tls';  // 'tls' ou 'ssl'
+            $mail->Port       = 587;    // 587 pour TLS, 465 pour SSL
 
-        $email = (new Email())
-            ->from($utilisateur->getEmail())
-            ->to($receveur->getEmail())
-            ->subject('Conférence invalidée')
-            ->text('Votre conférence ' . $conference->getNom() . ' a été invalidée.');
+            // Paramètres de l'e-mail
+            $mail->setFrom('c.gravallon@lprs.fr');
+            $mail->addAddress('clementgravallon93@gmail.com');
+            $mail->Subject = 'Refus de conférence';
+            $mail->Body    = 'Votre conférence à été refusé, refaite une demande ;)';
 
-        $mailer->send($email);
-        */
+            // Envoyer l'e-mail
+            $mail->send();
+            echo 'L\'e-mail a été envoyé avec succès.';
+        } catch (Exception $e) {
+            echo "Erreur lors de l'envoi de l'e-mail : {$mail->ErrorInfo}";
+        }
 
         return $this->redirectToRoute('conference.index');
     }
