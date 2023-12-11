@@ -4,7 +4,35 @@
 
 {% block datatable_styles %}
     {{ parent() }}
-    <!-- Ajouter des styles spécifiques à DataTables si nécessaire -->
+    <style>
+        .btn-postuler {
+            color: #fff;
+        }
+
+        .btn-postule {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-postuler:hover {
+            color: #fff;
+        }
+
+        .btn-postule:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .btn-voir-postulations {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-voir-postulations:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -13,13 +41,13 @@
             <h1 style="text-align: center">Liste des offres d'emploi</h1>
             <hr class="my-4">
 
-            {%  for message in app.flashes('success') %}
+            {% for message in app.flashes('success') %}
                 <div class="alert alert-success mt-4">
                     {{ message }}
                 </div>
             {% endfor %}
 
-            {%  if is_granted('ROLE_REPRESENTANT') %}
+            {% if is_granted('ROLE_REPRESENTANT') %}
                 <a href="{{ path('offreemploi.new') }}" class="btn btn-primary">
                     Créer une offre d'emploi
                 </a>
@@ -42,7 +70,7 @@
                     {% if is_granted('ROLE_ETUDIANT') %}
                         <th scope="col">Postulation</th>
                     {% endif %}
-                    {% if is_granted('REPRESENTANT') %}
+                    {% if is_granted('ROLE_REPRESENTANT') %}
                         <th scope="col">Voir les postulations</th>
                     {% endif %}
                 </tr>
@@ -57,15 +85,15 @@
                         {% if is_granted('ROLE_ETUDIANT') %}
                             <td>
                                 {% if offre.isAlreadyAppliedBy(app.user) %}
-                                    Vous avez postulé à cette offre.
+                                    <button class="btn btn-success btn-postule" disabled>Postulé</button>
                                 {% else %}
-                                    <a href="{{ path('offre_emploi.postulation', {'id': offre.id}) }}" class="btn btn-info">Postuler</a>
+                                    <a href="{{ path('offre_emploi.postulation', {'id': offre.id}) }}" class="btn btn-info btn-postuler">Postuler</a>
                                 {% endif %}
                             </td>
                         {% endif %}
                         {% if is_granted('ROLE_REPRESENTANT') %}
                             <td>
-                                <a href="{{ path('postulations.index', {'id': offre.id}) }}" class="btn btn-info">Voir les postulations</a>
+                                <a href="{{ path('postulations.index', {'id': offre.id}) }}" class="btn btn-info btn-voir-postulations">Voir les postulations</a>
                             </td>
                         {% endif %}
                     </tr>
@@ -73,26 +101,24 @@
                 </tbody>
             </table>
             <div class="navigation d-flex justify-content-center mt-4">
-                {{ knp_pagination_render(offres) }}
+
             </div>
         {% else %}
             <h4>Il n'y a pas d'offres d'emploi</h4>
         {% endif %}
     </div>
 {% endblock %}
+
 {% block datatable_scripts %}
     {{ parent() }}
     <!-- Initialisation de DataTables -->
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#dataTable').DataTable({
                 "aoColumnDefs": [
-                    { "bSortable": false, "aTargets": [0, 1, 2, 3,
-                            {% if is_granted('ROLE_ETUDIANT') %}4{% endif %}
-                            {% if is_granted('ROLE_REPRESENTANT') %}{% if is_granted('ROLE_ETUDIANT') %}, 5{% else %}4{% endif %}{% endif %} ] }
+                    {"bSortable": false, "aTargets": [0, 1, 2, 3, {% if is_granted('ROLE_ETUDIANT') %}4{% endif %} {% if is_granted('ROLE_REPRESENTANT') %}{% if is_granted('ROLE_ETUDIANT') %}, 5{% else %}4{% endif %}{% endif %}]}
                 ]
             });
         });
     </script>
 {% endblock %}
-

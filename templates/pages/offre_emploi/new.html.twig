@@ -3,38 +3,40 @@
 {% block title %}HSP - Créer une offre d'emploi{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 class="mt-4" style="text-align: center">Création d'une offre d'emploi</h1>
-        <hr class="my-4">
+    <div class="container mt-4">
+        <div class="border p-4">
+            <h1 class="mt-4" style="text-align: center">Création d'une offre d'emploi</h1>
+            <hr class="my-4">
 
-        {{ form_start(form) }}
+            {{ form_start(form) }}
 
-        <div class="form-group">
-            {{ form_label(form.titre) }}
-            {{ form_widget(form.titre) }}
-            {{ form_errors(form.titre) }}
+            <div class="form-group">
+                {{ form_label(form.titre) }}
+                {{ form_widget(form.titre) }}
+                {{ form_errors(form.titre) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.type_contrat) }}
+                {{ form_widget(form.type_contrat) }}
+                {{ form_errors(form.type_contrat) }}
+            </div>
+
+            <div class="form-error">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_row(form.submit) }}
+            </div>
+
+            {{ form_end(form) }}
         </div>
-
-        <div class="form-group">
-            {{ form_label(form.description) }}
-            {{ form_widget(form.description) }}
-            {{ form_errors(form.description) }}
-        </div>
-
-        <div class="form-group">
-            {{ form_label(form.type_contrat) }}
-            {{ form_widget(form.type_contrat) }}
-            {{ form_errors(form.type_contrat) }}
-        </div>
-
-        <div class="form-error">
-            {{ form_errors(form) }}
-        </div>
-
-        <div class="form-group">
-            {{ form_row(form.submit) }}
-        </div>
-
-        {{ form_end(form) }}
     </div>
 {% endblock %}

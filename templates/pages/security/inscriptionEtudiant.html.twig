@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} HSP - Inscription Étudiant
-{% endblock %}
-
+{% block title %} HSP - Inscription Étudiant {% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1 class="mt-4" style="text-align: center">Formulaire d'inscription étudiant</h1>
-
-        {{ form(form) }}
-
+        <div class="card mt-4">
+            <h1 class="card-header text-center">Formulaire d'inscription étudiant</h1>
+            <div class="card-body">
+                {{ form(form) }}
+            </div>
+        </div>
     </div>
 {% endblock %}

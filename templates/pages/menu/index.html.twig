@@ -2,51 +2,97 @@
 
 {% block title %} HSP - Menu {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .menu-item {
+            transition: background-color 0.3s;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .menu-item:hover {
+            background-color: #1aa990; /* Change this to the desired hover color */
+        }
+
+        .menu-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            padding: 30px; /* Adjust the padding to increase the button size */
+        }
+
+        .menu-icon {
+            width: 150px; /* Adjust the icon size as needed */
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .menu-text {
+            margin: 0;
+            font-size: 25px; /* Adjust the text size as needed */
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div class="container mt-4 text-center">
         <h1>Menu</h1>
         <hr class="my-4">
         <div class="row">
             {% if is_granted('ROLE_ADMIN') %}
-                <div class="col-md-4" style="margin-left: 17%; display: block; text-align: center;">
-                    <a href="utilisateur">
-                        <img src="images/user_accounts.svg" alt="Comptes utilisateurs">
-                        <h4>Comptes utilisateurs</h4>
-                    </a>
+                <div class="col-md-4">
+                    <div class="menu-item">
+                        <a href="utilisateur">
+                            <img src="images/user_accounts.svg" alt="Comptes utilisateurs" class="menu-icon">
+                            <p class="menu-text">Comptes utilisateurs</p>
+                        </a>
+                    </div>
                 </div>
             {% endif %}
             <div class="col-md-4">
-                <a href="conference">
-                    <img src="images/conference.svg" alt="Conférences">
-                    <h4>Conférences</h4>
-                </a>
+                <div class="menu-item">
+                    <a href="conference">
+                        <img src="images/conference.svg" alt="Conférences" class="menu-icon">
+                        <p class="menu-text">Conférences</p>
+                    </a>
+                </div>
             </div>
             {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_REPRESENTANT') %}
                 <div class="col-md-4">
-                    <a href="offre_emploi">
-                        <img src="images/contract_icon.svg" alt="Offres d'emploi">
-                        <h4>Offres d'emploi</h4>
-                    </a>
+                    <div class="menu-item">
+                        <a href="offre_emploi">
+                            <img src="images/contract_icon.svg" alt="Offres d'emploi" class="menu-icon">
+                            <p class="menu-text">Offres d'emploi</p>
+                        </a>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <a href="rendez_vous">
-                        <img src="images/rdv.svg" alt="Rendez-vous">
-                        <h4>Rendez-vous</h4>
-                    </a>
+                    <div class="menu-item">
+                        <a href="rendez_vous">
+                            <img src="images/rdv.svg" alt="Rendez-vous" class="menu-icon">
+                            <p class="menu-text">Rendez-vous</p>
+                        </a>
+                    </div>
                 </div>
             {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
-                <div class="col-md-4" style="margin-top: 5%;  margin-left: 17%; display: block; text-align: center;">
-                    <a href="amphitheatre">
-                        <img src="images/amphitheater.svg" alt="Amphithéâtres">
-                        <h4>Amphithéâtres</h4>
-                    </a>
+                <div class="col-md-4">
+                    <div class="menu-item">
+                        <a href="amphitheatre">
+                            <img src="images/amphitheater.svg" alt="Amphithéâtres" class="menu-icon">
+                            <p class="menu-text">Amphithéâtres</p>
+                        </a>
+                    </div>
                 </div>
-                <div class="col-md-4" style="margin-top: 5%;">
-                    <a href="type_offre">
-                        <img src="images/contract_icon.svg" alt="Types d'offres">
-                        <h4>Types d'offres</h4>
-                    </a>
+                <div class="col-md-4 mx-auto">
+                    <div class="menu-item">
+                        <a href="type_offre">
+                            <img src="images/contract_icon.svg" alt="Types d'offres" class="menu-icon">
+                            <p class="menu-text">Types d'offres</p>
+                        </a>
+                    </div>
                 </div>
             {% endif %}
         </div>
