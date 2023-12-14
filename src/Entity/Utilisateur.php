@@ -323,4 +323,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function eraseCredentials()
+    {
+
+    }
 }

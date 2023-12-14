@@ -93,7 +93,7 @@ class RepresentantHType extends AbstractType
                     new Assert\NotBlank(),
                 ]
             ])
-            ->add('plainPassword', RepeatedType:: class, [
+            ->add('password', RepeatedType:: class, [
                 'type' => PasswordType:: class,
                 'first_options' => [
                     'attr' => [

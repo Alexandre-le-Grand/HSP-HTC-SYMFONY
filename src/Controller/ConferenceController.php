@@ -224,12 +224,17 @@ class ConferenceController extends AbstractController
         MailerInterface $mailer,
         Request $request,
         Conference $conference,
-        EntityManagerInterface $manager) : Response
-    {
+        EntityManagerInterface $manager
+    ): Response {
         $amphitheatre = $conference->getRefAmphi();
 
         if ($amphitheatre) {
+            $amphitheatre->setDisponible(true);
+            $amphitheatre->setHeureFin(null);
+
             $conference->setRefAmphi(null);
+
+            $manager->persist($amphitheatre);
         }
 
         $conference->setStatut(false);

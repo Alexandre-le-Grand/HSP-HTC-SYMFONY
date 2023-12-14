@@ -126,7 +126,7 @@ class UtilisateurType extends AbstractType
                     new Assert\Email()
                 ]
             ])
-            ->add('plainPassword', RepeatedType:: class, [
+            ->add('password', RepeatedType:: class, [
                 'type' => PasswordType:: class,
                 'first_options' => [
                     'attr' => [

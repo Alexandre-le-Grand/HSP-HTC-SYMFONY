@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
             $admin->setEmail($this->faker->email());
             $admin->setStatut(1);
             $admin->setRoles(['ROLE_ADMIN']);
-            $admin->setPlainpassword('password');
+            $admin->setPassword('password');
             $admin->setResetToken(null);
 
             // Pour le premier administrateur, pas de référence à un autre administrateur
@@ -54,7 +54,7 @@ class AppFixtures extends Fixture
             $etudiant->setEmail($this->faker->email());
             $etudiant->setStatut($this->faker->boolean());
             $etudiant->setRoles(['ROLE_ETUDIANT']);
-            $etudiant->setPlainpassword('password');
+            $etudiant->setPassword('password');
             $domainesEtude = ['Chirurgie', 'Pédiatrie','Cardiologie','Dermatologie','Ophtalmologie','Neurologie','Radiologie','Psychiatrie','Orthopédie', 'Gastro-entérologie','Urologie','Néphrologie','Endocrinologie','Rhumatologie','Hématologie', 'Oncologie','Infectiologie' ,'Anesthésiologie'];
             $etudiant->setDomaineEtude($this->faker->randomElement($domainesEtude));
             $etudiant->setResetToken(null);
@@ -70,7 +70,7 @@ class AppFixtures extends Fixture
             $representant->setEmail($this->faker->email());
             $representant->setStatut($this->faker->boolean());
             $representant->setRoles(['ROLE_REPRESENTANT']);
-            $representant->setPlainpassword('password');
+            $representant->setPassword('password');
             $representant->setNomHopital($this->faker->lastName);
             $representant->setAdresse($this->faker->address);
             $representant->setRole($this->faker->jobTitle);
